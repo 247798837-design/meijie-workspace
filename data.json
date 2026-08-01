@@ -1,0 +1,37 @@
+{
+  "_seeded": true,
+  "version": 2,
+  "tasks": [
+    {"text": "发布今日口播视频", "prio": "p0", "done": false, "family": false},
+    {"text": "跟进3个意向客户", "prio": "p1", "done": false, "family": false},
+    {"text": "完成学习卡一张", "prio": "p2", "done": false, "family": false},
+    {"text": "陪儿子检查作业", "prio": "p1", "done": false, "family": true}
+  ],
+  "flywheel": {"write": "", "shoot": "", "publish": "", "connect": 0, "need": 0, "income": 0, "review": ""},
+  "mindset": {"energyScore": 7, "morningMood": 8, "nightMood": 0, "resistances": [], "affirmation": "今天的我比昨天更接近目标"},
+  "dailyGoal": "推进三平台内容闭环",
+  "eduFund": {"saved": 0},
+  "goalPlan": {
+    "yearTarget": 80000,
+    "yearBaseActual": 18407.60,
+    "monthKeyword": "高阶客户转化",
+    "products": {"p1199": {"deals": 0, "income": 0}, "p14999": {"deals": 0, "income": 0}, "p49800": {"deals": 0, "income": 0}}
+  },
+  "fanGoal": {"current": 194, "target": 500},
+  "monthlyPublishGoal": 30,
+  "videoStats": {"totalViews": 25725, "totalLikes": 291, "totalComments": 295, "totalShares": 78, "totalFollowers": 194, "totalVideos": 256},
+  "customerRecords": [],
+  "slots": [
+    {"time": "09:00", "cat": "内容生产", "plan": 120, "actual": 0},
+    {"time": "14:00", "cat": "客户深聊", "plan": 120, "actual": 0},
+    {"time": "20:30", "cat": "学习复盘", "plan": 60, "actual": 0}
+  ],
+  "inspirations": [],
+  "projects": [],
+  "learningCard": {"what": "", "source": "觉醒早课", "insight": "", "apply": ""},
+  "cases": [],
+  "review": {"best": "", "adjust": ""},
+  "obsidianSeeded": true,
+  "dailyRecords": {},
+  "targets": {"short": {"goal": 60, "current": 0}, "xhs": {"goal": 20, "current": 0}, "follow": {"goal": 200, "current": 194}, "income": {"goal": 6667, "current": 0}}
+}
