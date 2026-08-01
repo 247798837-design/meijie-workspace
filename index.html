@@ -2,355 +2,243 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>梅姐飞轮 · 工作台</title>
-<meta name="description" content="梅姐·天赋成长 — 每日执行工作台。五项管理、AI内容工厂、品牌工具箱。">
 <style>
-  :root {
-    --paper: #fbf7ee;
-    --paper-soft: #f4efe4;
-    --paper-deep: #e8dfcc;
-    --card: #fffef9;
-    --ink: #2c2416;
-    --ink-2: #5c4f3a;
-    --ink-3: #8a7b65;
-    --gold: #b8860b;
-    --gold-light: #d4a843;
-    --gold-soft: rgba(184, 134, 11, 0.10);
-    --rose: #c77d7d;
-    --rose-soft: rgba(199, 125, 125, 0.08);
-    --jade: #5b8c6f;
-    --jade-soft: rgba(91, 140, 111, 0.08);
-    --rule: rgba(44, 36, 22, 0.12);
-    --shadow: 0 2px 16px rgba(44, 36, 22, 0.07);
-    --shadow-hover: 0 8px 32px rgba(44, 36, 22, 0.12);
-    --radius: 12px;
-    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
-    --display: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: var(--display);
-    background: var(--paper);
-    color: var(--ink);
-    line-height: 1.6;
-    min-height: 100vh;
-    background-image:
-      radial-gradient(ellipse at 20% 0%, rgba(184, 134, 11, 0.04) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 100%, rgba(199, 125, 125, 0.03) 0%, transparent 60%);
-  }
-
-  /* ── Header ── */
-  .header {
-    text-align: center;
-    padding: 56px 24px 40px;
-  }
-  .header-logo {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #d4a843, #b8860b);
-    color: #fff;
-    font-size: 32px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 20px;
-    box-shadow: 0 4px 20px rgba(184, 134, 11, 0.25);
-    letter-spacing: -2px;
-  }
-  .header h1 {
-    font-size: 32px; font-weight: 700;
-    color: var(--ink);
-    letter-spacing: .04em;
-  }
-  .header p {
-    font-size: 16px; color: var(--ink-3);
-    margin-top: 8px;
-  }
-  .header .date {
-    display: inline-block;
-    margin-top: 12px;
-    padding: 4px 16px;
-    background: var(--gold-soft);
-    border-radius: 20px;
-    font-size: 14px; color: var(--gold);
-    font-weight: 600;
-  }
-
-  /* ── Stats Bar ── */
-  .stats-bar {
-    display: flex; justify-content: center; gap: 24px;
-    flex-wrap: wrap;
-    max-width: 720px; margin: 0 auto 48px;
-    padding: 0 24px;
-  }
-  .stat-item {
-    text-align: center;
-    padding: 16px 24px;
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    min-width: 120px;
-    border: 1px solid var(--rule);
-  }
-  .stat-num {
-    font-size: 28px; font-weight: 700;
-    color: var(--gold);
-  }
-  .stat-label {
-    font-size: 13px; color: var(--ink-3);
-    margin-top: 4px;
-  }
-
-  /* ── Section ── */
-  .section {
-    max-width: 960px; margin: 0 auto 48px;
-    padding: 0 24px;
-  }
-  .section-title {
-    font-size: 20px; font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 20px;
-    display: flex; align-items: center; gap: 10px;
-    letter-spacing: .03em;
-  }
-  .section-title::before {
-    content: '';
-    display: inline-block;
-    width: 4px; height: 20px;
-    border-radius: 2px;
-    background: var(--gold);
-  }
-
-  /* ── Tool Grid ── */
-  .tool-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 20px;
-  }
-  .tool-card {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 28px 24px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--rule);
-    transition: all .25s var(--ease);
-    position: relative;
-    overflow: hidden;
-  }
-  .tool-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-hover);
-    border-color: var(--gold-light);
-  }
-  .tool-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 3px 3px 0 0;
-    transition: height .25s var(--ease);
-  }
-  .tool-card:hover::before { height: 4px; }
-
-  .tool-card.panel::before { background: var(--gold); }
-  .tool-card.tool::before { background: var(--jade); }
-  .tool-card.brand::before { background: var(--rose); }
-
-  .tool-icon { font-size: 32px; margin-bottom: 14px; }
-  .tool-name { font-size: 18px; font-weight: 700; color: var(--ink); }
-  .tool-desc { font-size: 14px; color: var(--ink-3); margin-top: 6px; line-height: 1.5; }
-  .tool-tag {
-    display: inline-block;
-    margin-top: 12px;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 12px; font-weight: 600;
-  }
-  .tag-daily  { background: var(--gold-soft); color: var(--gold); }
-  .tag-tool   { background: var(--jade-soft); color: var(--jade); }
-  .tag-brand  { background: var(--rose-soft); color: var(--rose); }
-
-  /* ── Quick Links ── */
-  .quick-links {
-    display: flex; flex-wrap: wrap; gap: 12px;
-    justify-content: center;
-  }
-  .quick-link {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 10px 20px;
-    background: var(--card);
-    border: 1px solid var(--rule);
-    border-radius: 24px;
-    text-decoration: none;
-    color: var(--ink-2);
-    font-size: 14px;
-    font-weight: 600;
-    transition: all .2s var(--ease);
-  }
-  .quick-link:hover {
-    border-color: var(--gold-light);
-    color: var(--gold);
-    background: var(--gold-soft);
-  }
-
-  /* ── Footer ── */
-  .footer {
-    text-align: center;
-    padding: 40px 24px;
-    color: var(--ink-3);
-    font-size: 13px;
-    border-top: 1px solid var(--rule);
-    margin-top: 24px;
-  }
-  .footer a { color: var(--gold); text-decoration: none; }
-
-  /* ── Responsive ── */
-  @media (max-width: 640px) {
-    .header { padding: 40px 16px 28px; }
-    .header h1 { font-size: 26px; }
-    .tool-grid { grid-template-columns: 1fr; }
-    .stats-bar { gap: 12px; }
-    .stat-item { min-width: 90px; padding: 12px 16px; }
-    .stat-num { font-size: 22px; }
-  }
+:root{--paper:#fbf7ee;--card:#fffef9;--ink:#2c2416;--ink2:#5c4f3a;--ink3:#8a7b65;--gold:#b8860b;--goldL:#d4a843;--goldS:rgba(184,134,11,.1);--sage:#5b8c6f;--rose:#c77d7d;--r:14px;--sh:0 2px 16px rgba(44,36,22,.06)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--paper);color:var(--ink);min-height:100vh}
+.shell{max-width:900px;margin:auto;padding:16px}
+/* Header */
+.hd{text-align:center;padding:28px 0 16px}.hd h1{font-size:26px;font-family:Georgia,"Songti SC",serif;color:#7f5f35}.hd .date{font-size:14px;color:var(--ink3);margin-top:4px}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--card);border-radius:var(--r);padding:14px;text-align:center;box-shadow:var(--sh);border:1px solid rgba(44,36,22,.06)}.stat b{display:block;font-size:22px;color:var(--gold)}.stat span{font-size:11px;color:var(--ink3)}
+/* Tab */
+.tabs{display:flex;gap:4px;margin-bottom:16px}.tabs button{flex:1;border:1px solid rgba(44,36,22,.12);background:#fff;color:var(--ink2);border-radius:10px;padding:12px;cursor:pointer;font:inherit;font-weight:700;font-size:15px;transition:.15s}.tabs button.active{background:var(--gold);color:#fff;border-color:var(--gold)}.tabs button .sub{display:block;font-size:11px;font-weight:400;opacity:.7}
+/* Card */
+.card{background:var(--card);border-radius:var(--r);padding:18px;box-shadow:var(--sh);border:1px solid rgba(44,36,22,.06);margin-bottom:14px}
+.card h2{font-size:17px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h2 .badge{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--goldS);color:var(--gold);font-weight:600;margin-left:auto}
+/* Checklist */
+.chk{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(44,36,22,.04)}.chk:last-child{border-bottom:0}
+.chk input{width:18px;height:18px;accent-color:var(--sage);cursor:pointer}.chk .done{text-decoration:line-through;color:var(--ink3)}
+.tag{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:700}.t0{background:#ffe0e0;color:#c0392b}.t1{background:#fff3d4;color:#b8860b}.t2{background:#e0f0e8;color:#5b8c6f}.tf{background:#e8d5f5;color:#7b4fa0}
+/* Flywheel */
+.fly{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.fly .f{display:flex;flex-direction:column;gap:3px}.fly .f label{font-size:11px;font-weight:600;color:var(--ink2)}
+.fly .f input,.fly .f textarea{width:100%;border:1px solid rgba(44,36,22,.1);border-radius:7px;padding:8px 10px;font:inherit;font-size:13px}
+.fly .fw{grid-column:1/-1}.fly .fw textarea{min-height:44px;resize:vertical}
+/* Summary */
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sm{background:linear-gradient(135deg,#fbf7ee,#f7f3eb);border-radius:10px;padding:12px;text-align:center}.sm b{display:block;font-size:20px;color:var(--gold)}.sm span{font-size:11px;color:var(--ink3)}
+/* Form */
+.fld{display:flex;flex-direction:column;gap:3px;margin-bottom:10px}.fld label{font-size:11px;font-weight:600;color:var(--ink2)}
+.fld input,.fld textarea{width:100%;border:1px solid rgba(44,36,22,.1);border-radius:7px;padding:8px 10px;font:inherit;font-size:13px}.fld textarea{min-height:60px;resize:vertical}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:7px;padding:8px 14px;font:inherit;font-weight:700;font-size:13px;cursor:pointer;gap:4px}.btn:active{transform:scale(.97)}.btn-p{background:var(--ink);color:#fff}.btn-s{background:var(--sage);color:#fff}.btn-o{background:#fff;color:var(--ink);border:1px solid rgba(44,36,22,.12)}.btn-r{background:var(--rose);color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+/* Review Output */
+.output{background:#27323a;color:#e0e8e0;border-radius:10px;padding:14px;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;max-height:300px;overflow:auto;margin-top:10px}
+/* Links bar */
+.links{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.links a{font-size:12px;color:var(--ink3);text-decoration:none;padding:6px 12px;border-radius:20px;border:1px solid rgba(44,36,22,.1);transition:.15s}.links a:hover{color:var(--gold);border-color:var(--goldL)}
+.foot{text-align:center;color:var(--ink3);font-size:12px;padding:20px 0}
+/* Desktop layout */
+@media(min-width:700px){
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid2 .card{margin-bottom:0}
+}
+@media(max-width:500px){.fly{grid-template-columns:1fr 1fr}.summary{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
+<div class="shell">
 
-<!-- ═══ Header ═══ -->
-<header class="header">
-  <div class="header-logo">梅</div>
-  <h1>梅姐飞轮 · 工作台</h1>
-  <p>陪读妈妈 × 创业者 · 双轨并行执行系统</p>
-  <div class="date" id="todayDate"></div>
-</header>
+  <div class="hd">
+    <h1>🔄 梅姐飞轮 · 工作台</h1>
+    <div class="date" id="todayLabel">---</div>
+  </div>
 
-<!-- ═══ Stats Bar ═══ -->
-<div class="stats-bar">
-  <div class="stat-item">
-    <div class="stat-num" id="gaokaoDays">—</div>
-    <div class="stat-label">高考倒计时</div>
+  <div class="stats" id="statsBar"></div>
+
+  <div class="links">
+    <a href="mobile/">📱 手机版</a>
+    <a href="panels/five-mgmt/">📊 完整驾驶舱</a>
+    <a href="https://chat.deepseek.com" target="_blank">🧠 DeepSeek</a>
+    <a href="https://claude.ai" target="_blank">🤖 Claude</a>
   </div>
-  <div class="stat-item">
-    <div class="stat-num" id="deepworkDays">—</div>
-    <div class="stat-label">深耕天数</div>
+
+  <div class="tabs">
+    <button id="tabDay" class="active" onclick="switchTab('day')">☀️ 白天执行<span class="sub">打勾·飞轮</span></button>
+    <button id="tabNight" onclick="switchTab('night')">🌙 晚间复盘<span class="sub">汇总·复盘</span></button>
   </div>
-  <div class="stat-item">
-    <div class="stat-num" id="accompanyDays">—</div>
-    <div class="stat-label">陪读天数</div>
+
+  <!-- ═══ DAY TAB ═══ -->
+  <div id="dayTab">
+    <div class="grid2">
+      <div class="card">
+        <h2>📋 今日待办 <span class="badge" id="taskBadge">0/0</span></h2>
+        <div id="taskList"></div>
+        <div class="row">
+          <input id="newTask" placeholder="添加任务，回车确认" style="flex:1;border:1px solid rgba(44,36,22,.1);border-radius:7px;padding:8px 10px;font:inherit;font-size:13px" onkeydown="if(event.key==='Enter')addTask()">
+          <button class="btn btn-s" onclick="addTask()">+</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>💰 今日飞轮</h2>
+        <div class="fly">
+          <div class="f"><label>✍️ 写</label><input id="fwWrite" onchange="autoSave()"></div>
+          <div class="f"><label>📹 拍</label><input id="fwShoot" onchange="autoSave()"></div>
+          <div class="f"><label>📡 发</label><input id="fwPublish" onchange="autoSave()"></div>
+          <div class="f"><label>🤝 连接</label><input id="fwConnect" type="number" min="0" onchange="autoSave()"></div>
+          <div class="f"><label>🎯 需求</label><input id="fwNeed" type="number" min="0" onchange="autoSave()"></div>
+          <div class="f"><label>💰 到账</label><input id="fwIncome" type="number" min="0" step="0.01" onchange="autoSave()"></div>
+          <div class="f fw"><label>📝 复盘</label><textarea id="fwReview" onchange="autoSave()" placeholder="今天什么动作带来结果？"></textarea></div>
+        </div>
+        <div class="row"><span id="saved" style="font-size:11px;color:var(--sage)"></span></div>
+      </div>
+    </div>
   </div>
+
+  <!-- ═══ NIGHT TAB ═══ -->
+  <div id="nightTab" style="display:none">
+    <div class="card">
+      <h2>📊 今日概览</h2>
+      <div class="summary" id="summary"></div>
+    </div>
+    <div class="card">
+      <h2>📋 任务完成</h2>
+      <div id="taskReview"></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h2>🌿 心态复盘</h2>
+        <div class="fld"><label>最佳恢复动作</label><input id="bestAction" onchange="saveReview()"></div>
+        <div class="fld"><label>明天调整</label><input id="tomorrowAdjust" onchange="saveReview()"></div>
+        <div class="fld"><label>晚间状态 (1-10)</label><input id="nightScore" type="number" min="1" max="10" onchange="saveReview()"></div>
+      </div>
+      <div class="card">
+        <h2>✍️ 生成复盘</h2>
+        <div class="row">
+          <button class="btn btn-p" onclick="generateReview()">🔮 一键生成</button>
+          <button class="btn btn-o" onclick="copyReview()">📋 复制</button>
+          <button class="btn btn-r" onclick="exportMD()">📝 导出MD</button>
+        </div>
+        <div class="output" id="reviewOutput">点击「一键生成」查看今日复盘报告</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">梅姐飞轮 · 工作台 &nbsp;|&nbsp; <a href="https://github.com/247798837-design/meijie-workspace" style="color:var(--gold)">GitHub</a></div>
 </div>
 
-<!-- ═══ Panels ═══ -->
-<section class="section">
-  <h2 class="section-title">核心面板</h2>
-  <div class="tool-grid">
-    <a href="mobile/" class="tool-card panel" style="border:2px solid var(--gold-light);background:linear-gradient(135deg,#fffef9,#fdf8ee)">
-      <div class="tool-icon">📱</div>
-      <div class="tool-name">📱 手机工作台（新！）</div>
-      <div class="tool-desc">六项管理·每日打卡·飞轮追踪。手机浏览器打开，可装到桌面像APP一样用。</div>
-      <span class="tool-tag tag-daily">🔥 每日必用</span>
-    </a>
-    <a href="panels/day/" class="tool-card panel">
-      <div class="tool-icon">☀️</div>
-      <div class="tool-name">白天执行板</div>
-      <div class="tool-desc">今日待办·飞轮打卡·快速操作。打开就打勾，专注执行。</div>
-      <span class="tool-tag tag-daily">白天用</span>
-    </a>
-    <a href="panels/night/" class="tool-card panel">
-      <div class="tool-icon">🌙</div>
-      <div class="tool-name">晚间复盘板</div>
-      <div class="tool-desc">今日汇总·复盘文字生成·明日计划。一键导出Markdown。</div>
-      <span class="tool-tag tag-daily">晚上用</span>
-    </a>
-  </div>
-</section>
-
-<!-- ═══ Tools ═══ -->
-<section class="section">
-  <h2 class="section-title">工具箱</h2>
-  <div class="tool-grid">
-    <a href="tools/ai-pipeline/" class="tool-card tool">
-      <div class="tool-icon">🤖</div>
-      <div class="tool-name">AI 内容流水线</div>
-      <div class="tool-desc">DeepSeek + Codex + Hyper 三引擎，全自动视频制作可视化链路。</div>
-      <span class="tool-tag tag-tool">内容工厂</span>
-    </a>
-    <a href="tools/claude-zh/" class="tool-card tool">
-      <div class="tool-icon">🔧</div>
-      <div class="tool-name">Claude Desktop 中文补丁</div>
-      <div class="tool-desc">一键汉化 Claude Desktop。macOS &amp; Windows 双平台，自动备份可恢复。</div>
-      <span class="tool-tag tag-tool">开源工具</span>
-    </a>
-    <a href="#" class="tool-card tool" style="opacity:0.5; pointer-events:none;">
-      <div class="tool-icon">📹</div>
-      <div class="tool-name">视频号模板库</div>
-      <div class="tool-desc">Life·口播·融合短剧 三类视频模板，Hyperframes 动画引擎驱动。</div>
-      <span class="tool-tag tag-tool">即将上线</span>
-    </a>
-    <a href="#" class="tool-card tool" style="opacity:0.5; pointer-events:none;">
-      <div class="tool-icon">📱</div>
-      <div class="tool-name">小红书9图工厂</div>
-      <div class="tool-desc">生命数字系列9图模板，一键生成，品牌统一视觉。</div>
-      <span class="tool-tag tag-tool">即将上线</span>
-    </a>
-  </div>
-</section>
-
-<!-- ═══ Brand Assets ═══ -->
-<section class="section">
-  <h2 class="section-title">品牌资产</h2>
-  <div class="tool-grid">
-    <a href="brand/media-kit/" class="tool-card brand">
-      <div class="tool-icon">🎨</div>
-      <div class="tool-name">媒体资料包</div>
-      <div class="tool-desc">梅姐个人形象、Logo、品牌色板、简介文案。对外合作即取即用。</div>
-      <span class="tool-tag tag-brand">品牌建设</span>
-    </a>
-  </div>
-</section>
-
-<!-- ═══ Quick Links ═══ -->
-<section class="section">
-  <h2 class="section-title">快捷入口</h2>
-  <div class="quick-links">
-    <a href="https://chat.deepseek.com" class="quick-link" target="_blank" rel="noopener">🧠 DeepSeek</a>
-    <a href="https://claude.ai" class="quick-link" target="_blank" rel="noopener">🤖 Claude</a>
-    <a href="https://channels.weixin.qq.com" class="quick-link" target="_blank" rel="noopener">📺 视频号后台</a>
-    <a href="https://creator.xiaohongshu.com" class="quick-link" target="_blank" rel="noopener">📕 小红书创作者</a>
-    <a href="https://mp.weixin.qq.com" class="quick-link" target="_blank" rel="noopener">📝 公众号后台</a>
-  </div>
-</section>
-
-<!-- ═══ Footer ═══ -->
-<footer class="footer">
-  梅姐飞轮 · 工作台 v1.0 &nbsp;|&nbsp;
-  <a href="https://github.com/247798837-design/meijie-workspace" target="_blank" rel="noopener">GitHub</a> &nbsp;|&nbsp;
-  每天进步一点点 🌱
-</footer>
-
 <script>
-  // Today's date
-  const d = new Date();
-  const week = ['日','一','二','三','四','五','六'];
-  document.getElementById('todayDate').textContent =
-    `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 · 星期${week[d.getDay()]}`;
+// ═══ STORAGE ═══
+var SK='mei_five_management_v1',state={};
+function L(){try{state=JSON.parse(localStorage.getItem(SK)||'{}')}catch(e){state={}}}
+function S(){state._ts=Date.now();localStorage.setItem(SK,JSON.stringify(state))}
+function G(k,d){var o=state,p=k.split('.');for(var i=0;i<p.length-1;i++){if(!o[p[i]])o[p[i]]={};o=o[p[i]]}if(o[p[p.length-1]]===undefined)o[p[p.length-1]]=d;return o[p[p.length-1]]}
 
-  // 梅姐真实数据（2026-08-01基准）
-  const gaokao = new Date(2028, 5, 7);          // 高考日 2028-06-07 → 倒计时676天
-  const accompanyStart = new Date(2026, 2, 1);  // 陪读开始 2026-03-01 → 第154天
-  const deepworkStart = new Date(2023, 9, 14);  // 深耕开始 2023-10-14 → 第1022天
+// ═══ DATE ═══
+function fmt(d){var w=['日','一','二','三','四','五','六'];return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+w[d.getDay()]}
+function countdown(t){return Math.ceil((t-new Date())/(86400000))}
+function daysSince(s){return Math.floor((new Date()-s)/(86400000))+1}
+function today(){return new Date().toISOString().slice(0,10)}
+var A={gaokao:new Date(2028,5,7),accompany:new Date(2026,2,1),deepwork:new Date(2023,9,15)};
 
-  const diffDays = (a, b) => Math.ceil((b - a) / (1000 * 60 * 60 * 24));
+// ═══ TAB SWITCH ═══
+function switchTab(t){
+  document.getElementById('dayTab').style.display=t==='day'?'block':'none';
+  document.getElementById('nightTab').style.display=t==='night'?'block':'none';
+  document.getElementById('tabDay').className=t==='day'?'active':'';
+  document.getElementById('tabNight').className=t==='night'?'active':'';
+  if(t==='night')renderNight();
+}
+var saveTimer;
+function autoSave(){clearTimeout(saveTimer);saveTimer=setTimeout(function(){
+  var fw=G('flywheel',{});
+  fw.write=document.getElementById('fwWrite').value;fw.shoot=document.getElementById('fwShoot').value;
+  fw.publish=document.getElementById('fwPublish').value;fw.connect=parseInt(document.getElementById('fwConnect').value)||0;
+  fw.need=parseInt(document.getElementById('fwNeed').value)||0;fw.income=parseFloat(document.getElementById('fwIncome').value)||0;
+  fw.review=document.getElementById('fwReview').value;S();
+  document.getElementById('saved').textContent='已保存 '+new Date().toLocaleTimeString();
+},400)}
 
-  document.getElementById('gaokaoDays').textContent = diffDays(d, gaokao) + ' 天';
-  document.getElementById('deepworkDays').textContent = diffDays(deepworkStart, d) + ' 天';
-  document.getElementById('accompanyDays').textContent = diffDays(accompanyStart, d) + ' 天';
+// ═══ RENDER: DAY ═══
+function renderDay(){
+  L();var d=new Date();document.getElementById('todayLabel').textContent=fmt(d);
+  document.getElementById('statsBar').innerHTML=
+    '<div class="stat"><b>'+countdown(A.gaokao)+'</b><span>🎓 高考倒计时</span></div>'+
+    '<div class="stat"><b>'+daysSince(A.deepwork)+'</b><span>💪 深耕密码</span></div>'+
+    '<div class="stat"><b>'+daysSince(A.accompany)+'</b><span>🏠 陪读天数</span></div>';
+  var tasks=G('tasks',[]);
+  var done=tasks.filter(function(t){return t.done}).length;
+  document.getElementById('taskBadge').textContent=done+'/'+tasks.length;
+  document.getElementById('taskList').innerHTML=tasks.length?tasks.map(function(t,i){
+    var cls=t.family?'tf':t.prio==='p0'?'t0':t.prio==='p1'?'t1':'t2';
+    var lbl=t.family?'家':t.prio==='p0'?'P0':t.prio==='p1'?'P1':'';
+    return '<div class="chk"><input type="checkbox" '+(t.done?'checked':'')+' onchange="toggle('+i+')"><span class="'+(t.done?'done':'')+'">'+t.text+'</span>'+(lbl?'<span class="tag '+cls+'">'+lbl+'</span>':'')+'</div>';
+  }).join(''):'<div style="text-align:center;padding:24px;color:var(--ink3)">还没有任务，输入后回车添加</div>';
+  var fw=G('flywheel',{});
+  document.getElementById('fwWrite').value=fw.write||'';document.getElementById('fwShoot').value=fw.shoot||'';
+  document.getElementById('fwPublish').value=fw.publish||'';document.getElementById('fwConnect').value=fw.connect||'';
+  document.getElementById('fwNeed').value=fw.need||'';document.getElementById('fwIncome').value=fw.income||'';
+  document.getElementById('fwReview').value=fw.review||'';
+}
+function toggle(i){var t=G('tasks',[]);if(t[i]){t[i].done=!t[i].done;S();renderDay()}}
+function addTask(){
+  var v=document.getElementById('newTask').value.trim();if(!v)return;
+  var tasks=G('tasks',[]);var prio=tasks.length===0?'p0':tasks.length===1?'p1':'p2';
+  var family=v.indexOf('#家庭')>-1;if(family)v=v.replace('#家庭','').trim();
+  tasks.unshift({text:v,prio:prio,done:false,family:family});S();
+  document.getElementById('newTask').value='';renderDay();
+}
+
+// ═══ RENDER: NIGHT ═══
+function renderNight(){
+  L();
+  var tasks=G('tasks',[]);var done=tasks.filter(function(t){return t.done});
+  var fw=G('flywheel',{});var ms=G('mindset',{});
+  document.getElementById('summary').innerHTML=
+    '<div class="sm"><b>'+(tasks.length||'0')+'</b><span>总任务</span></div>'+
+    '<div class="sm"><b>'+done.length+'/'+tasks.length+'</b><span>已完成</span></div>'+
+    '<div class="sm"><b>¥'+(fw.income||0)+'</b><span>今日到账</span></div>'+
+    '<div class="sm"><b>'+(fw.connect||0)+'人</b><span>连接</span></div>'+
+    '<div class="sm"><b>'+(ms.energyScore||'—')+'分</b><span>能量</span></div>'+
+    '<div class="sm"><b>'+(ms.morningMood||'—')+'/'+(ms.nightMood||'—')+'</b><span>晨/晚</span></div>';
+  document.getElementById('taskReview').innerHTML=tasks.length?tasks.map(function(t){
+    return '<div class="chk"><input type="checkbox" '+(t.done?'checked':'')+' disabled><span class="'+(t.done?'done':'')+'">'+t.text+'</span></div>';
+  }).join(''):'<div style="text-align:center;padding:20px;color:var(--ink3)">今天没有记录</div>';
+  var rv=G('review',{});
+  document.getElementById('bestAction').value=rv.best||'';document.getElementById('tomorrowAdjust').value=rv.adjust||'';
+  document.getElementById('nightScore').value=ms.nightMood||'';
+}
+function saveReview(){
+  var rv=G('review',{});rv.best=document.getElementById('bestAction').value;
+  rv.adjust=document.getElementById('tomorrowAdjust').value;rv.date=today();
+  var ms=G('mindset',{});ms.nightMood=parseInt(document.getElementById('nightScore').value)||0;S();
+}
+function generateReview(){
+  saveReview();L();var tasks=G('tasks',[]);var fw=G('flywheel',{});var ms=G('mindset',{});
+  var done=tasks.filter(function(t){return t.done});var family=tasks.filter(function(t){return t.family&&t.done});
+  var r='=== 梅姐晚间复盘 · '+today()+' ===\n\n【今日数据】\n';
+  r+='📋 任务：'+done.length+'/'+tasks.length+'\n';
+  tasks.forEach(function(t){r+='  '+(t.done?'✅':'⬜')+' '+t.text+(t.family?' 👨‍👩‍👦':'')+'\n'});
+  r+='\n💰 飞轮：写='+(fw.write||'—')+' 拍='+(fw.shoot||'—')+' 发='+(fw.publish||'—');
+  r+=' 连接='+(fw.connect||0)+' 需求='+(fw.need||0)+' 到账=¥'+(fw.income||0)+'\n';
+  r+='🌿 心态：晨='+(ms.morningMood||'—')+' 晚='+(document.getElementById('nightScore').value||'—')+'\n';
+  r+='💡 最佳动作：'+(document.getElementById('bestAction').value||'—');
+  r+='\n🔧 明天调整：'+(document.getElementById('tomorrowAdjust').value||'—')+'\n';
+  if(family.length)r+='\n👨‍👩‍👦 家庭：\n'+family.map(function(t){return '  ✅ '+t.text}).join('\n');
+  r+='\n【明日计划】\n- [ ] ';
+  document.getElementById('reviewOutput').textContent=r;
+}
+function copyReview(){var t=document.getElementById('reviewOutput').textContent;navigator.clipboard.writeText(t).then(function(){alert('已复制！')})}
+function exportMD(){generateReview();var b=new Blob([document.getElementById('reviewOutput').textContent],{type:'text/markdown'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='复盘-'+today()+'.md';a.click()}
+
+// ═══ INIT ═══
+renderDay();
 </script>
 </body>
 </html>
