@@ -4,29 +4,55 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>梅姐飞轮 · 工作台</title>
 <style>
-:root{--paper:#fbf7ee;--card:#fffef9;--ink:#2c2416;--ink2:#5c4f3a;--ink3:#8a7b65;--gold:#b8860b;--goldL:#d4a843;--goldS:rgba(184,134,11,.1);--sage:#5b8c6f;--rose:#c77d7d;--r:12px;--sh:0 2px 12px rgba(44,36,22,.05)}
+:root{--paper:#fbf7ee;--card:#fffef9;--ink:#2c2416;--ink2:#5c4f3a;--ink3:#8a7b65;--gold:#b8860b;--goldS:rgba(184,134,11,.1);--sage:#5b8c6f;--rose:#c77d7d;--r:12px}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--paper);color:var(--ink);min-height:100vh}
 .shell{max-width:960px;margin:auto;padding:16px}
-.hd{text-align:center;padding:24px 0 12px}.hd h1{font-size:24px;font-family:Georgia,"Songti SC",serif;color:#7f5f35}.hd .date{font-size:13px;color:var(--ink3);margin-top:3px}
+/* Header */
+.hd{text-align:center;padding:24px 0 12px}.hd h1{font-size:24px;font-family:Georgia,"Songti SC",serif;color:#7f5f35}.hd .date{font-size:13px;color:var(--ink3)}
+/* Stats */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.stat{background:var(--card);border-radius:var(--r);padding:12px;text-align:center;box-shadow:var(--sh);border:1px solid rgba(44,36,22,.05)}.stat b{display:block;font-size:20px;color:var(--gold)}.stat span{font-size:10px;color:var(--ink3)}
-.tabs{display:flex;gap:4px;margin-bottom:14px}.tabs button{flex:1;border:1px solid rgba(44,36,22,.1);background:#fff;color:var(--ink2);border-radius:10px;padding:10px;cursor:pointer;font:inherit;font-weight:700;font-size:14px}.tabs button.active{background:var(--gold);color:#fff;border-color:var(--gold)}.tabs button .sub{display:block;font-size:10px;font-weight:400;opacity:.7}
-.page{display:none}.page.active{display:block}
-.card{background:var(--card);border-radius:var(--r);padding:16px;box-shadow:var(--sh);border:1px solid rgba(44,36,22,.05);margin-bottom:12px}
-.card h3{font-size:15px;margin-bottom:10px;display:flex;align-items:center;gap:6px}.card h3 .badge{font-size:10px;padding:2px 7px;border-radius:8px;background:var(--goldS);color:var(--gold);font-weight:600;margin-left:auto}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.chk{display:grid;grid-template-columns:20px 1fr auto;gap:6px;align-items:center;padding:7px 0;border-bottom:1px solid rgba(44,36,22,.03)}.chk:last-child{border-bottom:0}.chk input{width:16px;height:16px;accent-color:var(--sage);cursor:pointer}.chk .done{text-decoration:line-through;color:var(--ink3)}
-.tag{font-size:9px;padding:1px 6px;border-radius:6px;font-weight:700}.t0{background:#ffe0e0;color:#c0392b}.t1{background:#fff3d4;color:#b8860b}.t2{background:#e0f0e8;color:#5b8c6f}.tf{background:#e8d5f5;color:#7b4fa0}
-.fly{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.fly .f{display:flex;flex-direction:column;gap:2px}.fly .f label{font-size:10px;font-weight:600;color:var(--ink2)}.fly .f input{width:100%;border:1px solid rgba(44,36,22,.08);border-radius:6px;padding:7px 8px;font:inherit;font-size:12px}.fly .fw{grid-column:1/-1}.fly .fw textarea{width:100%;border:1px solid rgba(44,36,22,.08);border-radius:6px;padding:7px 8px;font:inherit;font-size:12px;min-height:38px;resize:vertical}
-.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.sm{background:linear-gradient(135deg,#fbf7ee,#f7f3eb);border-radius:8px;padding:10px;text-align:center}.sm b{display:block;font-size:18px;color:var(--gold)}.sm span{font-size:10px;color:var(--ink3)}
-.fld{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}.fld label{font-size:10px;font-weight:600;color:var(--ink2)}.fld input,.fld textarea,.fld select{width:100%;border:1px solid rgba(44,36,22,.08);border-radius:6px;padding:7px 8px;font:inherit;font-size:12px}.fld textarea{min-height:50px;resize:vertical}
-.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:6px;padding:7px 12px;font:inherit;font-weight:700;font-size:12px;cursor:pointer;gap:3px}.btn:active{transform:scale(.97)}.btn-p{background:var(--ink);color:#fff}.btn-s{background:var(--sage);color:#fff}.btn-o{background:#fff;color:var(--ink);border:1px solid rgba(44,36,22,.1)}.btn-r{background:var(--rose);color:#fff}.btn-g{background:var(--gold);color:#fff}
+.stat{background:var(--card);border-radius:var(--r);padding:12px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,.04);border:1px solid rgba(44,36,22,.05)}
+.stat b{display:block;font-size:20px;color:var(--gold)}.stat span{font-size:10px;color:var(--ink3)}
+/* Section divider */
+.sec{font-size:18px;font-weight:700;padding:16px 0 8px;display:flex;align-items:center;gap:6px;color:var(--ink)}
+/* Card */
+.card{background:var(--card);border-radius:var(--r);padding:16px;box-shadow:0 1px 8px rgba(0,0,0,.04);border:1px solid rgba(44,36,22,.05);margin-bottom:10px}
+.card h3{font-size:15px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.card h3 .badge{font-size:10px;padding:2px 7px;border-radius:8px;background:var(--goldS);color:var(--gold);font-weight:600;margin-left:auto}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+/* Checklist */
+.chk{display:grid;grid-template-columns:20px 1fr auto;gap:6px;align-items:center;padding:7px 0;border-bottom:1px solid rgba(44,36,22,.03)}
+.chk:last-child{border-bottom:0}
+.chk input{width:16px;height:16px;accent-color:var(--sage);cursor:pointer}
+.chk .done{text-decoration:line-through;color:var(--ink3)}
+.tag{font-size:9px;padding:1px 6px;border-radius:6px;font-weight:700}
+.t0{background:#ffe0e0;color:#c0392b}.t1{background:#fff3d4;color:#b8860b}.t2{background:#e0f0e8;color:#5b8c6f}.tf{background:#e8d5f5;color:#7b4fa0}
+/* Flywheel */
+.fly{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.fly .f{display:flex;flex-direction:column;gap:2px}.fly .f label{font-size:10px;font-weight:600;color:var(--ink2)}
+.fly .f input{width:100%;border:1px solid rgba(44,36,22,.08);border-radius:6px;padding:7px 8px;font:inherit;font-size:12px}
+.fly .fw{grid-column:1/-1}.fly .fw textarea{width:100%;border:1px solid rgba(44,36,22,.08);border-radius:6px;padding:7px 8px;font:inherit;font-size:12px;min-height:38px;resize:vertical}
+/* Summary */
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.sm{background:linear-gradient(135deg,#fbf7ee,#f7f3eb);border-radius:8px;padding:10px;text-align:center}
+.sm b{display:block;font-size:18px;color:var(--gold)}.sm span{font-size:10px;color:var(--ink3)}
+/* Form */
+.fld{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}.fld label{font-size:10px;font-weight:600;color:var(--ink2)}
+.fld input,.fld textarea,.fld select{width:100%;border:1px solid rgba(44,36,22,.08);border-radius:6px;padding:7px 8px;font:inherit;font-size:12px}
+.fld textarea{min-height:50px;resize:vertical}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:6px;padding:7px 12px;font:inherit;font-weight:700;font-size:12px;cursor:pointer;gap:3px}
+.btn:active{transform:scale(.97)}.btn-p{background:var(--ink);color:#fff}.btn-s{background:var(--sage);color:#fff}.btn-o{background:#fff;color:var(--ink);border:1px solid rgba(44,36,22,.1)}.btn-r{background:var(--rose);color:#fff}
 .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}
-.output{background:#27323a;color:#e0e8e0;border-radius:8px;padding:12px;font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;max-height:250px;overflow:auto;margin-top:8px}
-.progress{height:6px;background:rgba(44,36,22,.06);border-radius:3px;overflow:hidden;margin:6px 0}.progress i{display:block;height:100%;background:linear-gradient(90deg,#b8860b,#d4a843);border-radius:inherit}
+/* Energy */
 .energy-row{display:flex;gap:4px;flex-wrap:wrap}.energy-btn{width:38px;height:38px;border:1px solid rgba(44,36,22,.08);background:#fff;border-radius:8px;font-size:16px;cursor:pointer}.energy-btn.sel{background:#f5d9a8;border-color:var(--gold)}
-.links{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}.links a{font-size:11px;color:var(--ink3);text-decoration:none;padding:5px 10px;border-radius:16px;border:1px solid rgba(44,36,22,.08)}.links a:hover{color:var(--gold);border-color:var(--goldL)}
+/* Progress */
+.progress{height:6px;background:rgba(44,36,22,.06);border-radius:3px;overflow:hidden;margin:6px 0}.progress i{display:block;height:100%;background:linear-gradient(90deg,#b8860b,#d4a843);border-radius:inherit}
+/* Output */
+.output{background:#27323a;color:#e0e8e0;border-radius:8px;padding:12px;font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;max-height:200px;overflow:auto;margin-top:8px}
+/* Links */
+.links{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}.links a{font-size:11px;color:var(--ink3);text-decoration:none;padding:5px 10px;border-radius:16px;border:1px solid rgba(44,36,22,.08)}.links a:hover{color:var(--gold);border-color:var(--goldL)}
 .foot{text-align:center;color:var(--ink3);font-size:11px;padding:16px 0}
 @media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr}.fly{grid-template-columns:1fr 1fr}.summary{grid-template-columns:1fr 1fr}}
 </style>
@@ -36,79 +62,69 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   <div class="hd"><h1>🔄 梅姐飞轮 · 工作台</h1><div class="date" id="todayLabel">---</div></div>
   <div class="stats" id="statsBar"></div>
   <div class="links">
-    <a href="mobile/">📱 手机版</a><a href="panels/five-mgmt/">📊 完整驾驶舱</a><a href="https://chat.deepseek.com" target="_blank">🧠 DeepSeek</a><a href="https://claude.ai" target="_blank">🤖 Claude</a>
-  </div>
-  <div class="tabs">
-    <button id="tab1" class="active" onclick="switchTab(1)">☀️ 执行<span class="sub">打勾·飞轮</span></button>
-    <button id="tab2" onclick="switchTab(2)">📊 六项管理<span class="sub">心态·目标·客户·时间·学习</span></button>
-    <button id="tab3" onclick="switchTab(3)">🌙 复盘<span class="sub">汇总·导出</span></button>
+    <a href="mobile/">📱 手机版</a><a href="https://chat.deepseek.com" target="_blank">🧠 DeepSeek</a><a href="https://claude.ai" target="_blank">🤖 Claude</a><a href="https://github.com/247798837-design/meijie-workspace" target="_blank">🐙 GitHub</a>
   </div>
 
-  <!-- ═══ TAB1: 执行 ═══ -->
-  <div id="pg1" class="page active">
-    <div class="grid2">
-      <div class="card"><h3>📋 今日待办 <span class="badge" id="taskBadge">0/0</span></h3><div id="taskList"></div><div class="row"><input id="newTask" placeholder="输入任务，回车添加（加 #家庭 标记家庭任务）" style="flex:1;border:1px solid rgba(44,36,22,.08);border-radius:6px;padding:7px 8px;font:inherit;font-size:12px" onkeydown="if(event.key==='Enter')addTask()"><button class="btn btn-s" onclick="addTask()">+</button></div></div>
-      <div class="card"><h3>💰 今日飞轮</h3><div class="fly">
-        <div class="f"><label>✍️ 写</label><input id="fwWrite" onchange="saveFw()"></div><div class="f"><label>📹 拍</label><input id="fwShoot" onchange="saveFw()"></div><div class="f"><label>📡 发</label><input id="fwPublish" onchange="saveFw()"></div>
-        <div class="f"><label>🤝 连接</label><input id="fwConnect" type="number" min="0" onchange="saveFw()"></div><div class="f"><label>🎯 需求</label><input id="fwNeed" type="number" min="0" onchange="saveFw()"></div><div class="f"><label>💰 到账</label><input id="fwIncome" type="number" min="0" step="0.01" onchange="saveFw()"></div>
-        <div class="f fw"><label>📝 复盘一句</label><textarea id="fwReview" onchange="saveFw()" placeholder="什么动作带来结果？"></textarea></div>
-      </div><div class="row"><span id="saved" style="font-size:10px;color:var(--sage)"></span></div></div>
+  <!-- ═══════════ 执行 ═══════════ -->
+  <div class="sec">☀️ 今日执行</div>
+  <div class="grid2">
+    <div class="card"><h3>📋 今日待办 <span class="badge" id="taskBadge">0/0</span></h3><div id="taskList"></div><div class="row"><input id="newTask" placeholder="输入任务回车添加（加 #家庭 标记家庭）" style="flex:1;border:1px solid rgba(44,36,22,.08);border-radius:6px;padding:7px 8px;font:inherit;font-size:12px" onkeydown="if(event.key==='Enter')addTask()"><button class="btn btn-s" onclick="addTask()">+</button></div></div>
+    <div class="card"><h3>💰 今日飞轮</h3><div class="fly">
+      <div class="f"><label>✍️ 写</label><input id="fwWrite" onchange="saveFw()"></div><div class="f"><label>📹 拍</label><input id="fwShoot" onchange="saveFw()"></div><div class="f"><label>📡 发</label><input id="fwPublish" onchange="saveFw()"></div>
+      <div class="f"><label>🤝 连接</label><input id="fwConnect" type="number" min="0" onchange="saveFw()"></div><div class="f"><label>🎯 需求</label><input id="fwNeed" type="number" min="0" onchange="saveFw()"></div><div class="f"><label>💰 到账 ¥</label><input id="fwIncome" type="number" min="0" step="0.01" onchange="saveFw()"></div>
+      <div class="f fw"><label>📝 复盘一句</label><textarea id="fwReview" onchange="saveFw()" placeholder="什么动作带来结果？"></textarea></div>
+    </div><div class="row"><span id="saved" style="font-size:10px;color:var(--sage)"></span></div></div>
+  </div>
+
+  <!-- ═══════════ 六项管理 ═══════════ -->
+  <div class="sec">📊 六项管理</div>
+  <div class="grid2">
+    <!-- 1. 心态 -->
+    <div class="card"><h3>🌿 心态管理</h3>
+      <div class="energy-row" id="energyBtns"></div>
+      <div class="grid2" style="margin-top:6px"><div class="fld"><label>早晨 (1-10)</label><input id="morningMood" type="number" min="1" max="10" onchange="saveMindset()"></div><div class="fld"><label>晚上 (1-10)</label><input id="nightMood" type="number" min="1" max="10" onchange="saveMindset()"></div></div>
+      <div class="fld"><label>心理阻力</label><div id="resistances" style="display:flex;flex-wrap:wrap;gap:3px"></div></div>
+      <div style="text-align:center;padding:6px;font-size:15px;font-weight:700;color:var(--rose)" id="affirmation"></div>
+      <div class="row"><button class="btn btn-o" onclick="newAff()">换一句</button><button class="btn btn-r" onclick="saveAff()">确认</button></div>
+    </div>
+    <!-- 2. 目标 -->
+    <div class="card"><h3>🎯 目标管理</h3>
+      <div class="fld"><label>今日主目标</label><input id="dailyGoal" onchange="saveGoal()" placeholder="今天最重要的结果"></div>
+      <div class="summary"><div class="sm"><b>¥80,000</b><span>年度</span></div><div class="sm"><b id="yearActual">¥0</b><span>已到账</span></div><div class="sm"><b id="yearGap">¥80,000</b><span>差距</span></div></div><div class="progress"><i id="yearBar" style="width:0%"></i></div>
+      <div class="summary"><div class="sm"><b>¥200,000</b><span>教育基金</span></div><div class="sm"><b id="eduSaved">¥0</b><span>已存</span></div><div class="sm"><b id="eduMonthly">¥9,091</b><span>月存</span></div></div><div class="progress"><i id="eduBar" style="width:0%"></i></div>
+      <div class="fld"><label>教育基金已存</label><input id="eduInput" type="number" min="0" step="100" onchange="saveEdu()"></div>
+    </div>
+    <!-- 3. 客户 -->
+    <div class="card"><h3>🤝 客户管理</h3>
+      <div id="custFunnel" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px"></div>
+      <div class="grid2"><div class="fld"><label>姓名</label><input id="cName"></div><div class="fld"><label>来源</label><select id="cSource"><option>微信</option><option>视频号</option><option>小红书</option><option>直播</option><option>转介绍</option><option>其他</option></select></div></div>
+      <div class="grid2"><div class="fld"><label>阶段</label><select id="cStage"><option value="S0">S0待触达</option><option value="S1">S1刚认识</option><option value="S2">S2有兴趣</option><option value="S3">S3中意向</option><option value="S4">S4高意向</option><option value="S5">S5已成交</option></select></div><div class="fld"><label>产品</label><select id="cProduct"><option>待判断</option><option>1199</option><option>14999</option><option>49800</option><option>其他</option></select></div></div>
+      <button class="btn btn-s" style="width:100%;margin-top:8px" onclick="saveCust()">保存客户</button>
+    </div>
+    <!-- 4. 时间 -->
+    <div class="card"><h3>⏰ 时间管理</h3>
+      <div id="timeSlots"></div>
+      <div class="summary" style="margin-top:8px"><div class="sm"><b id="timePlan">0</b><span>计划min</span></div><div class="sm"><b id="timeAct">0</b><span>实际min</span></div><div class="sm"><b id="timeRate">0%</b><span>执行率</span></div></div>
+      <button class="btn btn-o" style="width:100%;margin-top:8px" onclick="addSlot()">+ 时间块</button>
+    </div>
+    <!-- 5. 学习 -->
+    <div class="card"><h3>📚 学习管理</h3>
+      <div class="fld"><label>主题</label><input id="lWhat" onchange="saveLearn()"></div>
+      <div class="fld"><label>来源</label><select id="lSource" onchange="saveLearn()"><option>觉醒早课</option><option>会议</option><option>组会</option><option>课程</option><option>视频</option><option>其他</option></select></div>
+      <div class="fld"><label>心得</label><textarea id="lInsight" onchange="saveLearn()" rows="2"></textarea></div>
+      <div class="fld"><label>应用</label><input id="lApply" onchange="saveLearn()"></div>
     </div>
   </div>
 
-  <!-- ═══ TAB2: 六项管理 ═══ -->
-  <div id="pg2" class="page">
-    <div class="grid2">
-      <!-- 心态 -->
-      <div class="card"><h3>🌿 心态管理</h3>
-        <div class="energy-row" id="energyBtns"></div>
-        <div class="grid2" style="margin-top:8px"><div class="fld"><label>早晨 (1-10)</label><input id="morningMood" type="number" min="1" max="10" onchange="saveMindset()"></div><div class="fld"><label>晚上 (1-10)</label><input id="nightMood" type="number" min="1" max="10" onchange="saveMindset()"></div></div>
-        <div class="fld"><label>心理阻力</label><div id="resistances" style="display:flex;flex-wrap:wrap;gap:3px"></div></div>
-        <div style="text-align:center;padding:8px;font-size:16px;font-weight:700;color:var(--rose)" id="affirmation"></div>
-        <div class="row"><button class="btn btn-o" onclick="newAff()">换一句</button><button class="btn btn-r" onclick="saveAff()">确认</button></div>
-      </div>
-      <!-- 目标 -->
-      <div class="card"><h3>🎯 目标管理</h3>
-        <div class="summary"><div class="sm"><b>¥80,000</b><span>年度目标</span></div><div class="sm"><b id="yearActual">¥0</b><span>已到账</span></div><div class="sm"><b id="yearGap">¥80,000</b><span>差距</span></div></div>
-        <div class="progress"><i id="yearBar" style="width:0%"></i></div>
-        <div class="summary" style="margin-top:8px"><div class="sm"><b>¥200,000</b><span>教育基金</span></div><div class="sm"><b id="eduSaved">¥0</b><span>已存</span></div><div class="sm"><b id="eduMonthly">¥9,091</b><span>每月需存</span></div></div>
-        <div class="progress"><i id="eduBar" style="width:0%"></i></div>
-        <div class="fld"><label>教育基金已存金额</label><input id="eduInput" type="number" min="0" step="100" onchange="saveEdu()"></div>
-      </div>
-      <!-- 客户 -->
-      <div class="card"><h3>🤝 客户管理</h3>
-        <div id="custFunnel" style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px"></div>
-        <div class="fld"><label>姓名</label><input id="cName" placeholder="必填"></div>
-        <div class="grid2"><div class="fld"><label>来源</label><select id="cSource"><option>微信</option><option>视频号</option><option>小红书</option><option>直播</option><option>转介绍</option><option>其他</option></select></div><div class="fld"><label>阶段</label><select id="cStage"><option value="S0">S0待触达</option><option value="S1">S1刚认识</option><option value="S2">S2有兴趣</option><option value="S3">S3中意向</option><option value="S4">S4高意向</option><option value="S5">S5已成交</option></select></div></div>
-        <div class="fld"><label>产品</label><select id="cProduct"><option>待判断</option><option>1199</option><option>14999</option><option>49800</option><option>其他</option></select></div>
-        <button class="btn btn-s" style="width:100%" onclick="saveCust()">保存客户</button>
-      </div>
-      <!-- 时间 -->
-      <div class="card"><h3>⏰ 时间管理</h3>
-        <div id="timeSlots"></div>
-        <div class="summary" style="margin-top:8px"><div class="sm"><b id="timePlan">0</b><span>计划min</span></div><div class="sm"><b id="timeAct">0</b><span>实际min</span></div><div class="sm"><b id="timeRate">0%</b><span>执行率</span></div></div>
-        <button class="btn btn-o" style="width:100%;margin-top:8px" onclick="addSlot()">+ 时间块</button>
-      </div>
-      <!-- 学习 -->
-      <div class="card"><h3>📚 学习管理</h3>
-        <div class="fld"><label>今天学了什么</label><input id="lWhat" onchange="saveLearn()"></div>
-        <div class="fld"><label>来源</label><select id="lSource" onchange="saveLearn()"><option>觉醒早课</option><option>会议</option><option>组会</option><option>复盘</option><option>课程</option><option>公众号</option><option>视频</option><option>其他</option></select></div>
-        <div class="fld"><label>核心心得</label><textarea id="lInsight" onchange="saveLearn()" rows="2"></textarea></div>
-        <div class="fld"><label>如何应用</label><input id="lApply" onchange="saveLearn()"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ TAB3: 复盘 ═══ -->
-  <div id="pg3" class="page">
-    <div class="card"><h3>📊 今日概览</h3><div class="summary" id="summary"></div></div>
+  <!-- ═══════════ 复盘 ═══════════ -->
+  <div class="sec">🌙 晚间复盘</div>
+  <div class="grid2">
+    <div class="card"><h3>📊 今日汇总</h3><div class="summary" id="summary"></div></div>
     <div class="card"><h3>📋 任务完成</h3><div id="taskReview"></div></div>
-    <div class="grid2">
-      <div class="card"><h3>🌿 心态复盘</h3><div class="fld"><label>最佳恢复动作</label><input id="bestAction" onchange="saveNight()"></div><div class="fld"><label>明天调整</label><input id="tomorrowAdjust" onchange="saveNight()"></div></div>
-      <div class="card"><h3>✍️ 生成复盘</h3><div class="row"><button class="btn btn-p" onclick="genReview()">🔮 一键生成</button><button class="btn btn-o" onclick="copyReview()">📋 复制</button><button class="btn btn-r" onclick="exportMD()">📝 导出</button></div><div class="output" id="reviewOutput">点击生成</div></div>
-    </div>
+    <div class="card"><h3>🌿 复盘输入</h3><div class="fld"><label>最佳恢复动作</label><input id="bestAction" onchange="saveNight()"></div><div class="fld"><label>明天调整</label><input id="tomorrowAdjust" onchange="saveNight()"></div></div>
+    <div class="card"><h3>✍️ 输出</h3><div class="row"><button class="btn btn-p" onclick="genReview()">🔮 生成复盘</button><button class="btn btn-o" onclick="copyReview()">📋 复制</button><button class="btn btn-r" onclick="exportMD()">📝 导出</button></div><div class="output" id="reviewOutput">点「生成复盘」</div></div>
   </div>
-  <div class="foot">梅姐飞轮 · 工作台 &nbsp;|&nbsp; <a href="https://github.com/247798837-design/meijie-workspace" style="color:var(--gold)">GitHub</a></div>
+  <div class="foot">梅姐飞轮 · 工作台 &nbsp;|&nbsp; 数据互通手机版 <a href="mobile/" style="color:var(--gold)">📱</a></div>
 </div>
 
 <script>
@@ -122,95 +138,81 @@ function daysSince(s){return Math.floor((new Date()-s)/(86400000))+1}
 function today(){return new Date().toISOString().slice(0,10)}
 var A={gaokao:new Date(2028,5,7),accompany:new Date(2026,2,1),deepwork:new Date(2023,9,15)};
 
-function switchTab(n){
-  for(var i=1;i<=3;i++){document.getElementById('pg'+i).classList.toggle('active',i===n);document.getElementById('tab'+i).classList.toggle('active',i===n)}
-  if(n===2)renderMgmt();if(n===3)renderNight();
-}
-
-// ═══ TAB1: 执行 ═══
-function renderAll(){
+function render(){
   L();var d=new Date();document.getElementById('todayLabel').textContent=fmt(d);
   document.getElementById('statsBar').innerHTML='<div class="stat"><b>'+countdown(A.gaokao)+'</b><span>🎓 高考倒计时</span></div><div class="stat"><b>'+daysSince(A.deepwork)+'</b><span>💪 深耕密码</span></div><div class="stat"><b>'+daysSince(A.accompany)+'</b><span>🏠 陪读天数</span></div>';
+  // Tasks
   var tasks=G('tasks',[]),done=tasks.filter(function(t){return t.done}).length;
   document.getElementById('taskBadge').textContent=done+'/'+tasks.length;
   document.getElementById('taskList').innerHTML=tasks.length?tasks.map(function(t,i){
     var cls=t.family?'tf':t.prio==='p0'?'t0':t.prio==='p1'?'t1':'t2',lbl=t.family?'家':t.prio==='p0'?'P0':t.prio==='p1'?'P1':'';
     return '<div class="chk"><input type="checkbox" '+(t.done?'checked':'')+' onchange="tog('+i+')"><span class="'+(t.done?'done':'')+'">'+t.text+'</span>'+(lbl?'<span class="tag '+cls+'">'+lbl+'</span>':'')+'</div>';
-  }).join(''):'<div style="text-align:center;padding:20px;color:var(--ink3)">还没有任务</div>';
+  }).join(''):'<div style="text-align:center;padding:20px;color:var(--ink3)">还没有任务，输入后回车添加</div>';
+  // Flywheel
   var fw=G('flywheel',{});document.getElementById('fwWrite').value=fw.write||'';document.getElementById('fwShoot').value=fw.shoot||'';document.getElementById('fwPublish').value=fw.publish||'';document.getElementById('fwConnect').value=fw.connect||'';document.getElementById('fwNeed').value=fw.need||'';document.getElementById('fwIncome').value=fw.income||'';document.getElementById('fwReview').value=fw.review||'';
-}
-function tog(i){var t=G('tasks',[]);if(t[i]){t[i].done=!t[i].done;S();renderAll();}}
-function addTask(){
-  var v=document.getElementById('newTask').value.trim();if(!v)return;var tasks=G('tasks',[]);
-  var prio=tasks.length===0?'p0':tasks.length===1?'p1':'p2',family=v.indexOf('#家庭')>-1;
-  if(family)v=v.replace('#家庭','').trim();tasks.unshift({text:v,prio:prio,done:false,family:family});S();document.getElementById('newTask').value='';renderAll();
-}
-function saveFw(){
-  var fw=G('flywheel',{});fw.write=document.getElementById('fwWrite').value;fw.shoot=document.getElementById('fwShoot').value;fw.publish=document.getElementById('fwPublish').value;fw.connect=parseInt(document.getElementById('fwConnect').value)||0;fw.need=parseInt(document.getElementById('fwNeed').value)||0;fw.income=parseFloat(document.getElementById('fwIncome').value)||0;fw.review=document.getElementById('fwReview').value;S();
-  document.getElementById('saved').textContent='已保存 '+new Date().toLocaleTimeString();
-}
-
-// ═══ TAB2: 六项管理 ═══
-function renderMgmt(){
-  L();var ms=G('mindset',{});
-  var scores=['🔥10','💪9','😊8','🙂7','😐6','😕5','😩4','😫3','💔2','😵1'],sel=ms.energyScore||0;
+  // Mindset
+  var ms=G('mindset',{}),scores=['🔥10','💪9','😊8','🙂7','😐6','😕5','😩4','😫3','💔2','😵1'],sel=ms.energyScore||0;
   document.getElementById('energyBtns').innerHTML=scores.map(function(s,i){var v=10-i;return '<button class="energy-btn'+(v===sel?' sel':'')+'" onclick="setEnergy('+v+')">'+s+'</button>'}).join('');
   document.getElementById('morningMood').value=ms.morningMood||'';document.getElementById('nightMood').value=ms.nightMood||'';
   var resistances=['封闭独处','焦虑','拖延','自我怀疑','害怕成交','注意力分散','家庭压力'],selR=ms.resistances||[];
   document.getElementById('resistances').innerHTML=resistances.map(function(r){return '<label style="padding:6px 8px;border:1px solid rgba(44,36,22,.08);border-radius:6px;background:'+(selR.indexOf(r)>-1?'#f5d9a8':'#fff')+';cursor:pointer;font-size:11px"><input type="checkbox" '+(selR.indexOf(r)>-1?'checked':'')+' onchange="togRes(\''+r+'\')" style="accent-color:var(--gold)">'+r+'</label>'}).join('');
-  var affs=['今天的我，比昨天更接近目标。','我相信过程，也相信结果。','我是儿子最好的榜样。','坚持做对的事，时间会给出答案。'],aff=ms.affirmation||affs[0];
-  document.getElementById('affirmation').textContent=aff;
+  var affs=['今天的我，比昨天更接近目标。','我相信过程，也相信结果。','我是儿子最好的榜样。','坚持做对的事，时间会给出答案。'];
+  document.getElementById('affirmation').textContent=ms.affirmation||affs[0];
   // Goals
   var gp=G('goalPlan',{}),actual=(gp.yearBaseActual||0)+(gp.productIncomes||[]).reduce(function(s,x){return s+(x.paid||0)},0),rate=Math.min(100,Math.round(actual/80000*100));
   document.getElementById('yearActual').textContent='¥'+actual.toLocaleString();document.getElementById('yearGap').textContent='¥'+(80000-actual).toLocaleString();document.getElementById('yearBar').style.width=rate+'%';
+  document.getElementById('dailyGoal').value=G('dailyGoal','');
   var edu=G('eduFund',{}),eduSaved=edu.saved||0,eduRate=Math.min(100,Math.round(eduSaved/200000*100)),months=22;
   document.getElementById('eduSaved').textContent='¥'+eduSaved.toLocaleString();document.getElementById('eduMonthly').textContent='¥'+Math.round((200000-eduSaved)/months).toLocaleString();document.getElementById('eduBar').style.width=eduRate+'%';document.getElementById('eduInput').value=eduSaved||'';
   // Customers
   var custs=G('customerRecords',[]),stages={S0:0,S1:0,S2:0,S3:0,S4:0,S5:0};custs.forEach(function(c){if(stages[c.stage]!==undefined)stages[c.stage]++});
   var labels={S0:'待触达',S1:'刚认识',S2:'有兴趣',S3:'中意向',S4:'高意向',S5:'已成交'};
-  document.getElementById('custFunnel').innerHTML=Object.entries(stages).map(function(e){return '<span class="pill" style="font-size:10px;padding:3px 6px;border-radius:8px;background:'+(e[0]==='S4'||e[0]==='S3'?'var(--goldS)':e[0]==='S5'?'#e0f0e8':'rgba(199,125,125,.1)')+';color:'+(e[0]==='S4'||e[0]==='S3'?'var(--gold)':e[0]==='S5'?'var(--sage)':'var(--rose)')+'">'+labels[e[0]]+' '+e[1]+'</span>'}).join(' ');
+  document.getElementById('custFunnel').innerHTML=Object.entries(stages).map(function(e){return '<span style="font-size:10px;padding:3px 6px;border-radius:8px;background:'+(e[0]==='S4'||e[0]==='S3'?'var(--goldS)':e[0]==='S5'?'#e0f0e8':'rgba(199,125,125,.1)')+';color:'+(e[0]==='S4'||e[0]==='S3'?'var(--gold)':e[0]==='S5'?'var(--sage)':'var(--rose)')+'">'+labels[e[0]]+' '+e[1]+'</span>'}).join(' ');
   // Time
   var slots=G('slots',[]);if(!slots.length)slots.push({time:'09:00',cat:'内容',plan:60,actual:0},{time:'10:00',cat:'客户',plan:60,actual:0},{time:'14:00',cat:'学习',plan:120,actual:0});
-  document.getElementById('timeSlots').innerHTML=slots.map(function(s,i){return '<div style="display:flex;gap:4px;align-items:center;padding:4px 0;font-size:11px"><b style="width:45px">'+s.time+'</b><span class="pill" style="font-size:9px">'+s.cat+'</span><input value="'+(s.plan||0)+'" style="width:40px;padding:3px;font-size:11px;border:1px solid rgba(44,36,22,.08);border-radius:4px;text-align:center" onchange="upSlot('+i+',\'plan\',this.value)"><input value="'+(s.actual||0)+'" style="width:40px;padding:3px;font-size:11px;border:1px solid rgba(44,36,22,.08);border-radius:4px;text-align:center" onchange="upSlot('+i+',\'actual\',this.value)"></div>'}).join('');
+  document.getElementById('timeSlots').innerHTML=slots.map(function(s,i){return '<div style="display:flex;gap:4px;align-items:center;padding:4px 0;font-size:11px"><b style="width:45px">'+s.time+'</b><span style="font-size:9px;padding:1px 5px;border-radius:6px;background:var(--goldS);color:var(--gold)">'+s.cat+'</span><input value="'+(s.plan||0)+'" style="width:42px;padding:3px;font-size:11px;border:1px solid rgba(44,36,22,.08);border-radius:4px;text-align:center" onchange="upSlot('+i+',\'plan\',this.value)"><input value="'+(s.actual||0)+'" style="width:42px;padding:3px;font-size:11px;border:1px solid rgba(44,36,22,.08);border-radius:4px;text-align:center" onchange="upSlot('+i+',\'actual\',this.value)"></div>'}).join('');
   var plan=slots.reduce(function(s,x){return s+(x.plan||0)},0),act=slots.reduce(function(s,x){return s+(x.actual||0)},0);
   document.getElementById('timePlan').textContent=plan;document.getElementById('timeAct').textContent=act;document.getElementById('timeRate').textContent=plan?Math.round(act/plan*100)+'%':'0%';
   // Learning
   var lc=G('learningCard',{});document.getElementById('lWhat').value=lc.what||'';document.getElementById('lSource').value=lc.source||'觉醒早课';document.getElementById('lInsight').value=lc.insight||'';document.getElementById('lApply').value=lc.apply||'';
-}
-function setEnergy(v){G('mindset',{}).energyScore=v;S();renderMgmt();}
-function togRes(r){var ms=G('mindset',{});if(!ms.resistances)ms.resistances=[];var i=ms.resistances.indexOf(r);i>-1?ms.resistances.splice(i,1):ms.resistances.push(r);S();renderMgmt();}
-function newAff(){var a=['今天的我，比昨天更接近目标。','我相信过程，也相信结果。','我是儿子最好的榜样。','坚持做对的事，时间会给出答案。'];document.getElementById('affirmation').textContent=a[Math.floor(Math.random()*a.length)];}
-function saveAff(){G('mindset',{}).affirmation=document.getElementById('affirmation').textContent;S();}
-function saveMindset(){var ms=G('mindset',{});ms.morningMood=parseInt(document.getElementById('morningMood').value)||0;ms.nightMood=parseInt(document.getElementById('nightMood').value)||0;S();}
-function saveEdu(){G('eduFund',{}).saved=parseFloat(document.getElementById('eduInput').value)||0;S();renderMgmt();}
-function saveCust(){
-  var v=document.getElementById('cName').value;if(!v)return;G('customerRecords',[]).push({name:v,source:document.getElementById('cSource').value,stage:document.getElementById('cStage').value,product:document.getElementById('cProduct').value,added:today()});S();document.getElementById('cName').value='';renderMgmt();
-}
-function addSlot(){G('slots',[]).push({time:'新增',cat:'其他',plan:30,actual:0});S();renderMgmt();}
-function upSlot(i,k,v){var s=G('slots',[]);if(s[i]){s[i][k]=parseInt(v)||0;S();renderMgmt();}}
-function saveLearn(){var lc=G('learningCard',{});lc.what=document.getElementById('lWhat').value;lc.source=document.getElementById('lSource').value;lc.insight=document.getElementById('lInsight').value;lc.apply=document.getElementById('lApply').value;lc.date=today();S();}
-
-// ═══ TAB3: 复盘 ═══
-function renderNight(){
-  L();var tasks=G('tasks',[]),done=tasks.filter(function(t){return t.done}),fw=G('flywheel',{}),ms=G('mindset',{});
-  document.getElementById('summary').innerHTML='<div class="sm"><b>'+(tasks.length||0)+'</b><span>总任务</span></div><div class="sm"><b>'+done.length+'/'+tasks.length+'</b><span>已完成</span></div><div class="sm"><b>¥'+(fw.income||0)+'</b><span>到账</span></div><div class="sm"><b>'+(fw.connect||0)+'人</b><span>连接</span></div><div class="sm"><b>'+(ms.energyScore||'—')+'分</b><span>能量</span></div><div class="sm"><b>'+(ms.morningMood||'—')+'/'+(ms.nightMood||'—')+'</b><span>晨/晚</span></div>';
-  document.getElementById('taskReview').innerHTML=tasks.length?tasks.map(function(t){return '<div class="chk"><input type="checkbox" '+(t.done?'checked':'')+' disabled><span class="'+(t.done?'done':'')+'">'+t.text+'</span></div>'}).join(''):'<div style="text-align:center;padding:20px;color:var(--ink3)">今天没有记录</div>';
+  // Night
+  var fw2=G('flywheel',{}),ms2=G('mindset',{});
+  document.getElementById('summary').innerHTML='<div class="sm"><b>'+(tasks.length||0)+'</b><span>任务</span></div><div class="sm"><b>'+done.length+'/'+tasks.length+'</b><span>完成</span></div><div class="sm"><b>¥'+(fw2.income||0)+'</b><span>到账</span></div><div class="sm"><b>'+(fw2.connect||0)+'人</b><span>连接</span></div><div class="sm"><b>'+(ms2.energyScore||'—')+'分</b><span>能量</span></div><div class="sm"><b>'+(ms2.morningMood||'—')+'/'+(ms2.nightMood||'—')+'</b><span>晨/晚</span></div>';
+  document.getElementById('taskReview').innerHTML=tasks.length?tasks.map(function(t){return '<div class="chk"><input type="checkbox" '+(t.done?'checked':'')+' disabled><span class="'+(t.done?'done':'')+'">'+t.text+'</span></div>'}).join(''):'<div style="padding:20px;text-align:center;color:var(--ink3)">今天没有记录</div>';
   var rv=G('review',{});document.getElementById('bestAction').value=rv.best||'';document.getElementById('tomorrowAdjust').value=rv.adjust||'';
 }
-function saveNight(){var rv=G('review',{});rv.best=document.getElementById('bestAction').value;rv.adjust=document.getElementById('tomorrowAdjust').value;rv.date=today();S();}
-function genReview(){
-  saveNight();L();var tasks=G('tasks',[]),fw=G('flywheel',{}),ms=G('mindset',{}),done=tasks.filter(function(t){return t.done}),family=tasks.filter(function(t){return t.family&&t.done});
-  var r='=== 梅姐晚间复盘 · '+today()+' ===\n\n【数据】\n📋 '+done.length+'/'+tasks.length+' 任务完成\n';tasks.forEach(function(t){r+='  '+(t.done?'✅':'⬜')+' '+t.text+(t.family?' 👨‍👩‍👦':'')+'\n')});
+
+// === Actions ===
+function tog(i){var t=G('tasks',[]);if(t[i]){t[i].done=!t[i].done;S();render()}}
+function addTask(){var v=document.getElementById('newTask').value.trim();if(!v)return;var tasks=G('tasks',[]),prio=tasks.length===0?'p0':tasks.length===1?'p1':'p2',family=v.indexOf('#家庭')>-1;if(family)v=v.replace('#家庭','').trim();tasks.unshift({text:v,prio:prio,done:false,family:family});S();document.getElementById('newTask').value='';render()}
+function saveFw(){var fw=G('flywheel',{});fw.write=document.getElementById('fwWrite').value;fw.shoot=document.getElementById('fwShoot').value;fw.publish=document.getElementById('fwPublish').value;fw.connect=parseInt(document.getElementById('fwConnect').value)||0;fw.need=parseInt(document.getElementById('fwNeed').value)||0;fw.income=parseFloat(document.getElementById('fwIncome').value)||0;fw.review=document.getElementById('fwReview').value;S();document.getElementById('saved').textContent='✓ '+new Date().toLocaleTimeString()}
+// Mindset
+function setEnergy(v){G('mindset',{}).energyScore=v;S();render()}
+function togRes(r){var ms=G('mindset',{});if(!ms.resistances)ms.resistances=[];var i=ms.resistances.indexOf(r);i>-1?ms.resistances.splice(i,1):ms.resistances.push(r);S();render()}
+function newAff(){var a=['今天的我比昨天更接近目标','我相信过程也相信结果','我是儿子最好的榜样','坚持做对的事时间会给出答案'];document.getElementById('affirmation').textContent=a[Math.floor(Math.random()*a.length)]}
+function saveAff(){G('mindset',{}).affirmation=document.getElementById('affirmation').textContent;S()}
+function saveMindset(){var ms=G('mindset',{});ms.morningMood=parseInt(document.getElementById('morningMood').value)||0;ms.nightMood=parseInt(document.getElementById('nightMood').value)||0;S()}
+// Goals
+function saveGoal(){state.dailyGoal=document.getElementById('dailyGoal').value;S()}
+function saveEdu(){G('eduFund',{}).saved=parseFloat(document.getElementById('eduInput').value)||0;S();render()}
+// Customers
+function saveCust(){var v=document.getElementById('cName').value;if(!v)return;G('customerRecords',[]).push({name:v,source:document.getElementById('cSource').value,stage:document.getElementById('cStage').value,product:document.getElementById('cProduct').value,added:today()});S();document.getElementById('cName').value='';render()}
+// Time
+function addSlot(){G('slots',[]).push({time:'新增',cat:'其他',plan:30,actual:0});S();render()}
+function upSlot(i,k,v){var s=G('slots',[]);if(s[i]){s[i][k]=parseInt(v)||0;S();render()}}
+// Learning
+function saveLearn(){var lc=G('learningCard',{});lc.what=document.getElementById('lWhat').value;lc.source=document.getElementById('lSource').value;lc.insight=document.getElementById('lInsight').value;lc.apply=document.getElementById('lApply').value;lc.date=today();S()}
+// Night
+function saveNight(){var rv=G('review',{});rv.best=document.getElementById('bestAction').value;rv.adjust=document.getElementById('tomorrowAdjust').value;rv.date=today();S()}
+function genReview(){saveNight();L();var tasks=G('tasks',[]),fw=G('flywheel',{}),ms=G('mindset',{}),done=tasks.filter(function(t){return t.done}),family=tasks.filter(function(t){return t.family&&t.done});
+  var r='=== 梅姐晚间复盘 '+today()+' ===\n\n【数据】\n📋 '+done.length+'/'+tasks.length+' 任务\n';tasks.forEach(function(t){r+='  '+(t.done?'✅':'⬜')+' '+t.text+(t.family?' 👨‍👩‍👦':'')+'\n')});
   r+='\n💰 写='+(fw.write||'—')+' 拍='+(fw.shoot||'—')+' 发='+(fw.publish||'—')+' 连='+(fw.connect||0)+' 需='+(fw.need||0)+' 到=¥'+(fw.income||0)+'\n';
-  r+='🌿 晨='+(ms.morningMood||'—')+' 晚='+(ms.nightMood||'—')+' 能量='+(ms.energyScore||'—')+'\n';
-  r+='💡 '+document.getElementById('bestAction').value+'\n🔧 '+document.getElementById('tomorrowAdjust').value+'\n';
-  if(family.length)r+='\n👨‍👩‍👦 '+family.map(function(t){return t.text}).join(', ')+'\n';
-  r+='\n【明日】\n- [ ] ';document.getElementById('reviewOutput').textContent=r;
-}
-function copyReview(){var t=document.getElementById('reviewOutput').textContent;navigator.clipboard.writeText(t).then(function(){alert('已复制！')})}
+  r+='🌿 晨='+(ms.morningMood||'—')+' 晚='+(ms.nightMood||'—')+' 能量='+(ms.energyScore||'—')+'\n💡 '+document.getElementById('bestAction').value+'\n🔧 '+document.getElementById('tomorrowAdjust').value+'\n';
+  if(family.length)r+='\n👨‍👩‍👦 '+family.map(function(t){return t.text}).join(', ');r+='\n\n【明日】\n- [ ] ';document.getElementById('reviewOutput').textContent=r}
+function copyReview(){navigator.clipboard.writeText(document.getElementById('reviewOutput').textContent).then(function(){alert('已复制！')})}
 function exportMD(){genReview();var b=new Blob([document.getElementById('reviewOutput').textContent],{type:'text/markdown'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='复盘-'+today()+'.md';a.click()}
 
-renderAll();
+render();
 </script>
 </body>
 </html>
