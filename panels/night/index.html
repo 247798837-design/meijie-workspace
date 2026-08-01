@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>梅姐 · 晚间复盘板</title>
+<style>
+:root{--paper:#fbf7ee;--card:#fffef9;--ink:#2c2416;--ink2:#5c4f3a;--ink3:#8a7b65;--gold:#b8860b;--goldL:#d4a843;--sage:#5b8c6f;--rose:#c77d7d;--r:14px;--sh:0 2px 16px rgba(44,36,22,.06)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#f4ecdf,#eee9f5 58%);color:var(--ink);min-height:100vh;padding:24px;display:flex;justify-content:center}
+.shell{max-width:800px;width:100%;display:grid;gap:16px}
+.top{text-align:center;padding:32px 0 8px}.top h1{font-size:28px;font-family:Georgia,"Songti SC",serif;color:#6b5a7b}.top p{color:var(--ink3);font-size:14px;margin-top:4px}
+.card{background:var(--card);border-radius:var(--r);padding:20px;box-shadow:var(--sh);border:1px solid rgba(44,36,22,.06)}
+.card h2{font-size:18px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.sm{background:linear-gradient(135deg,#fbf7ee,#f7f3eb);border-radius:10px;padding:14px;text-align:center}.sm b{display:block;font-size:22px;color:var(--gold)}.sm span{font-size:12px;color:var(--ink3)}
+.chk{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(44,36,22,.04)}.chk .done{text-decoration:line-through;color:var(--ink3)}
+.fld{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}.fld label{font-size:12px;font-weight:600;color:var(--ink2)}.fld textarea{width:100%;border:1px solid rgba(44,36,22,.12);border-radius:8px;padding:10px;font:inherit;font-size:14px;min-height:80px;resize:vertical}.fld input{width:100%;border:1px solid rgba(44,36,22,.12);border-radius:8px;padding:10px;font:inherit;font-size:14px}
+.output{background:#27323a;color:#e8f0ea;border-radius:10px;padding:16px;font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;max-height:400px;overflow:auto;margin-top:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:8px;padding:10px 18px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}.btn:active{transform:scale(.97)}.btn-p{background:var(--ink);color:#fff}.btn-g{background:var(--gold);color:#fff}.btn-r{background:var(--rose);color:#fff}.btn-o{background:var(--paper);color:var(--ink);border:1px solid rgba(44,36,22,.12)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.footer{text-align:center;color:var(--ink3);font-size:12px;padding:24px 0}
+@media(max-width:600px){.summary{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <h1>🌙 梅姐 · 晚间复盘板</h1>
+    <p id="todayLabel">---</p>
+  </div>
+
+  <div class="card">
+    <h2>📊 今日概览</h2>
+    <div class="summary" id="summary"></div>
+  </div>
+
+  <div class="card">
+    <h2>📋 任务完成情况</h2>
+    <div id="taskReview"></div>
+  </div>
+
+  <div class="card">
+    <h2>🌿 心态复盘</h2>
+    <div class="fld"><label>今天最有效的恢复动作</label><input id="bestAction" onchange="saveReview()"></div>
+    <div class="fld"><label>明天继续/调整/停止什么</label><input id="tomorrowAdjust" onchange="saveReview()"></div>
+    <div class="fld"><label>晚间真实状态 (1-10)</label><input id="nightScore" type="number" min="1" max="10" onchange="saveReview()"></div>
+  </div>
+
+  <div class="card">
+    <h2>✍️ 生成复盘文字</h2>
+    <div class="row">
+      <button class="btn btn-p" onclick="generateReview()">🔮 一键生成</button>
+      <button class="btn btn-o" onclick="copyReview()">📋 复制</button>
+      <button class="btn btn-r" onclick="exportMarkdown()">📝 导出Markdown</button>
+    </div>
+    <div class="output" id="reviewOutput">点击「一键生成」查看今日复盘报告</div>
+  </div>
+
+  <div class="footer">梅姐飞轮 · 晚间复盘板 &nbsp;|&nbsp; <a href="../day/" style="color:var(--gold)">☀️ 白天执行</a> &nbsp;|&nbsp; <a href="../../mobile/" style="color:var(--gold)">📱 手机版</a></div>
+</div>
+<script>
+var SK='mei_five_management_v1',state={};
+function L(){try{state=JSON.parse(localStorage.getItem(SK)||'{}')}catch(e){state={}}}
+function S(){state._ts=Date.now();localStorage.setItem(SK,JSON.stringify(state))}
+function G(k,d){var o=state,p=k.split('.');for(var i=0;i<p.length-1;i++){if(!o[p[i]])o[p[i]]={};o=o[p[i]]}if(o[p[p.length-1]]===undefined)o[p[p.length-1]]=d;return o[p[p.length-1]]}
+function fmt(d){var w=['日','一','二','三','四','五','六'];return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+w[d.getDay()]}
+function today(){return new Date().toISOString().slice(0,10)}
+
+function render(){
+  L();var d=new Date();document.getElementById('todayLabel').textContent=fmt(d);
+  var tasks=G('tasks',[]);var done=tasks.filter(function(t){return t.done}).length;
+  var fw=G('flywheel',{});var ms=G('mindset',{});
+  document.getElementById('summary').innerHTML=
+    '<div class="sm"><b>'+(tasks.length||'0')+'</b><span>总任务</span></div>'+
+    '<div class="sm"><b>'+done+'/'+tasks.length+'</b><span>已完成</span></div>'+
+    '<div class="sm"><b>¥'+(fw.income||0)+'</b><span>今日到账</span></div>'+
+    '<div class="sm"><b>'+(fw.connect||0)+'人</b><span>今日连接</span></div>'+
+    '<div class="sm"><b>'+(ms.energyScore||'—')+'分</b><span>能量状态</span></div>'+
+    '<div class="sm"><b>'+(ms.morningMood||'—')+'/'+(ms.nightMood||'—')+'</b><span>晨/晚心态</span></div>';
+  document.getElementById('taskReview').innerHTML=tasks.length?tasks.map(function(t){
+    return '<div class="chk"><input type="checkbox" '+(t.done?'checked':'')+' disabled><span class="'+(t.done?'done':'')+'">'+t.text+'</span><span style="font-size:10px;color:var(--ink3)">'+(t.family?'👨‍👩‍👦':'')+'</span></div>';
+  }).join(''):'<div style="text-align:center;padding:20px;color:var(--ink3)">今天没有记录任务</div>';
+  var rv=G('review',{});
+  document.getElementById('bestAction').value=rv.best||'';
+  document.getElementById('tomorrowAdjust').value=rv.adjust||'';
+  document.getElementById('nightScore').value=ms.nightMood||'';
+}
+function saveReview(){
+  var rv=G('review',{});rv.best=document.getElementById('bestAction').value;
+  rv.adjust=document.getElementById('tomorrowAdjust').value;rv.date=today();
+  var ms=G('mindset',{});ms.nightMood=parseInt(document.getElementById('nightScore').value)||0;S();
+}
+function generateReview(){
+  saveReview();L();var tasks=G('tasks',[]);var fw=G('flywheel',{});var ms=G('mindset',{});
+  var done=tasks.filter(function(t){return t.done});var family=tasks.filter(function(t){return t.family&&t.done});
+  var review='=== 梅姐晚间复盘 · '+today()+' ===\n\n';
+  review+='【今日核心数据】\n';
+  review+='📋 任务完成：'+done.length+'/'+tasks.length;
+  if(tasks.length)review+='\n'+tasks.map(function(t){return '  '+(t.done?'✅':'⬜')+' '+t.text+(t.family?' 👨‍👩‍👦':'')}).join('\n');
+  review+='\n\n💰 飞轮数据：\n  写：'+(fw.write||'—')+'\n  拍：'+(fw.shoot||'—');
+  review+='\n  发：'+(fw.publish||'—')+'\n  连接：'+(fw.connect||0)+'人';
+  review+='\n  需求：'+(fw.need||0)+'人\n  到账：¥'+(fw.income||0);
+  review+='\n\n🌿 心态：晨 '+ms.morningMood+' / 晚 '+(document.getElementById('nightScore').value||'—');
+  review+='\n  最佳恢复动作：'+(document.getElementById('bestAction').value||'—');
+  review+='\n  明天调整：'+(document.getElementById('tomorrowAdjust').value||'—');
+  if(family.length)review+='\n\n👨‍👩‍👦 家庭完成：'+family.length+'项\n'+family.map(function(t){return '  ✅ '+t.text}).join('\n');
+  review+='\n\n【明日计划草稿】\n- [ ] 从这里开始写明天要做什么...\n';
+  document.getElementById('reviewOutput').textContent=review;
+}
+function copyReview(){
+  var t=document.getElementById('reviewOutput').textContent;
+  navigator.clipboard.writeText(t).then(function(){alert('已复制到剪贴板！')});
+}
+function exportMarkdown(){
+  generateReview();
+  var md=document.getElementById('reviewOutput').textContent.replace(/===.*===/,'# 梅姐晚间复盘');
+  var blob=new Blob([md],{type:'text/markdown'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='复盘-'+today()+'.md';a.click();
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>梅姐 · 白天执行板</title>
+<style>
+:root{--paper:#fbf7ee;--card:#fffef9;--ink:#2c2416;--ink2:#5c4f3a;--ink3:#8a7b65;--gold:#b8860b;--goldL:#d4a843;--goldS:rgba(184,134,11,.1);--sage:#5b8c6f;--rose:#c77d7d;--r:14px;--sh:0 2px 16px rgba(44,36,22,.06)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#f4ecdf,#f8fbf7 58%);color:var(--ink);min-height:100vh;padding:24px;display:flex;justify-content:center}
+.shell{max-width:800px;width:100%;display:grid;gap:16px}
+.top{text-align:center;padding:32px 0 8px}
+.top h1{font-size:28px;font-family:Georgia,"Songti SC",serif;color:#7f5f35}.top p{color:var(--ink3);font-size:14px;margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:var(--card);border-radius:var(--r);padding:16px;text-align:center;box-shadow:var(--sh);border:1px solid rgba(44,36,22,.06)}.stat b{display:block;font-size:24px;color:var(--gold)}.stat span{font-size:12px;color:var(--ink3)}
+.card{background:var(--card);border-radius:var(--r);padding:20px;box-shadow:var(--sh);border:1px solid rgba(44,36,22,.06)}
+.card h2{font-size:18px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.chk{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(44,36,22,.06)}.chk:last-child{border-bottom:0}
+.chk input{width:20px;height:20px;accent-color:var(--sage);cursor:pointer}
+.tag{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:700}.t0{background:#ffe0e0;color:#c0392b}.t1{background:#fff3d4;color:#b8860b}.t2{background:#e0f0e8;color:#5b8c6f}.tf{background:#e8d5f5;color:#7b4fa0}
+.done{text-decoration:line-through;color:var(--ink3)}
+.fly{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.fly .f{display:flex;flex-direction:column;gap:4px}.fly .f label{font-size:12px;font-weight:600;color:var(--ink2)}.fly .f input{width:100%;border:1px solid rgba(44,36,22,.12);border-radius:8px;padding:10px;font:inherit;font-size:14px}
+.fw{grid-column:1/-1}.fw textarea{width:100%;border:1px solid rgba(44,36,22,.12);border-radius:8px;padding:10px;font:inherit;font-size:14px;min-height:50px;resize:vertical}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:8px;padding:10px 18px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}.btn:active{transform:scale(.97)}.btn-p{background:var(--ink);color:#fff}.btn-g{background:var(--gold);color:#fff}.btn-o{background:var(--paper);color:var(--ink);border:1px solid rgba(44,36,22,.12)}.btn-s{background:var(--sage);color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.footer{text-align:center;color:var(--ink3);font-size:12px;padding:24px 0}
+@media(max-width:600px){.stats{grid-template-columns:repeat(3,1fr);gap:6px}.stat{padding:10px}.stat b{font-size:18px}.fly{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <h1>☀️ 梅姐 · 白天执行板</h1>
+    <p id="todayLabel">---</p>
+  </div>
+  <div class="stats" id="statsBar"></div>
+  <div class="card">
+    <h2>📋 今日待办 <span id="taskCount" style="font-size:13px;font-weight:400;color:var(--ink3)"></span></h2>
+    <div id="taskList"></div>
+    <div class="row">
+      <input id="newTask" placeholder="快速添加任务，回车确认" style="flex:1;border:1px solid rgba(44,36,22,.12);border-radius:8px;padding:10px;font:inherit;font-size:14px" onkeydown="if(event.key==='Enter')addTask()">
+      <button class="btn btn-s" onclick="addTask()">+ 添加</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>💰 今日飞轮</h2>
+    <div class="fly">
+      <div class="f"><label>✍️ 写什么</label><input id="fwWrite" onchange="saveAll()"></div>
+      <div class="f"><label>📹 拍什么</label><input id="fwShoot" onchange="saveAll()"></div>
+      <div class="f"><label>📡 发哪里</label><input id="fwPublish" onchange="saveAll()"></div>
+      <div class="f"><label>🤝 连接</label><input id="fwConnect" type="number" min="0" onchange="saveAll()"></div>
+      <div class="f"><label>🎯 需求</label><input id="fwNeed" type="number" min="0" onchange="saveAll()"></div>
+      <div class="f"><label>💰 到账 ¥</label><input id="fwIncome" type="number" min="0" step="0.01" onchange="saveAll()"></div>
+      <div class="f fw"><label>📝 复盘一句话</label><textarea id="fwReview" onchange="saveAll()" placeholder="今天什么动作带来结果？"></textarea></div>
+    </div>
+    <div class="row"><button class="btn btn-g" onclick="saveAll()">💾 保存</button><span id="saved" style="font-size:12px;color:var(--sage)"></span></div>
+  </div>
+  <div class="footer">梅姐飞轮 · 白天执行板 &nbsp;|&nbsp; <a href="../night/" style="color:var(--gold)">🌙 晚间复盘</a> &nbsp;|&nbsp; <a href="../../mobile/" style="color:var(--gold)">📱 手机版</a></div>
+</div>
+<script>
+var SK='mei_five_management_v1',state={};
+function L(){try{state=JSON.parse(localStorage.getItem(SK)||'{}')}catch(e){state={}}}
+function S(){state._ts=Date.now();localStorage.setItem(SK,JSON.stringify(state))}
+function G(k,d){var o=state,p=k.split('.');for(var i=0;i<p.length-1;i++){if(!o[p[i]])o[p[i]]={};o=o[p[i]]}if(o[p[p.length-1]]===undefined)o[p[p.length-1]]=d;return o[p[p.length-1]]}
+function fmt(d){var w=['日','一','二','三','四','五','六'];return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+w[d.getDay()]}
+function daysSince(start){return Math.floor((new Date()-start)/(86400000))+1}
+function countdown(target){return Math.ceil((target-new Date())/(86400000))}
+var ANCHOR={gaokao:new Date(2028,5,7),accompany:new Date(2026,2,1),deepwork:new Date(2023,9,15)};
+
+function render(){
+  L();var d=new Date();
+  document.getElementById('todayLabel').textContent=fmt(d);
+  document.getElementById('statsBar').innerHTML=
+    '<div class="stat"><b>'+countdown(ANCHOR.gaokao)+'</b><span>高考倒计时</span></div>'+
+    '<div class="stat"><b>'+daysSince(ANCHOR.deepwork)+'</b><span>深耕密码</span></div>'+
+    '<div class="stat"><b>'+daysSince(ANCHOR.accompany)+'</b><span>陪读天数</span></div>';
+  var tasks=G('tasks',[]);
+  document.getElementById('taskCount').textContent=tasks.filter(function(t){return t.done}).length+'/'+tasks.length+' 完成';
+  document.getElementById('taskList').innerHTML=tasks.length?tasks.map(function(t,i){
+    var cls=t.family?'tf':t.prio==='p0'?'t0':t.prio==='p1'?'t1':'t2';
+    var lbl=t.family?'家庭':t.prio==='p0'?'P0':t.prio==='p1'?'P1':'P2';
+    return '<div class="chk"><input type="checkbox" '+(t.done?'checked':'')+' onchange="toggle('+i+')"><span class="'+(t.done?'done':'')+'">'+t.text+'</span><span class="tag '+cls+'">'+lbl+'</span></div>';
+  }).join(''):'<div style="text-align:center;padding:20px;color:var(--ink3)">还没有任务，添加第一个吧 ☝️</div>';
+  var fw=G('flywheel',{});
+  document.getElementById('fwWrite').value=fw.write||'';document.getElementById('fwShoot').value=fw.shoot||'';
+  document.getElementById('fwPublish').value=fw.publish||'';document.getElementById('fwConnect').value=fw.connect||'';
+  document.getElementById('fwNeed').value=fw.need||'';document.getElementById('fwIncome').value=fw.income||'';
+  document.getElementById('fwReview').value=fw.review||'';
+}
+function toggle(i){var t=G('tasks',[]);if(t[i]){t[i].done=!t[i].done;S();render()}}
+function addTask(){
+  var v=document.getElementById('newTask').value.trim();if(!v)return;
+  var tasks=G('tasks',[]);var prio=tasks.length===0?'p0':tasks.length===1?'p1':'p2';
+  tasks.unshift({text:v,prio:prio,done:false,family:false});S();
+  document.getElementById('newTask').value='';render();
+}
+function saveAll(){
+  var fw=G('flywheel',{});
+  fw.write=document.getElementById('fwWrite').value;fw.shoot=document.getElementById('fwShoot').value;
+  fw.publish=document.getElementById('fwPublish').value;fw.connect=parseInt(document.getElementById('fwConnect').value)||0;
+  fw.need=parseInt(document.getElementById('fwNeed').value)||0;fw.income=parseFloat(document.getElementById('fwIncome').value)||0;
+  fw.review=document.getElementById('fwReview').value;S();
+  document.getElementById('saved').textContent='已保存 '+new Date().toLocaleTimeString();
+}
+render();
+</script>
+</body>
+</html>
