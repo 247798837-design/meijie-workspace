@@ -324,7 +324,7 @@
 <!-- ═══ Footer ═══ -->
 <footer class="footer">
   梅姐飞轮 · 工作台 v1.0 &nbsp;|&nbsp;
-  <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a> &nbsp;|&nbsp;
+  <a href="https://github.com/247798837-design/meijie-workspace" target="_blank" rel="noopener">GitHub</a> &nbsp;|&nbsp;
   每天进步一点点 🌱
 </footer>
 
@@ -335,10 +335,10 @@
   document.getElementById('todayDate').textContent =
     `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 · 星期${week[d.getDay()]}`;
 
-  // Countdown calculations
-  const gaokao = new Date(2027, 5, 7); // 2027年高考大致日期
-  const accompanyStart = new Date(2025, 8, 1); // 陪读开始
-  const deepworkStart = new Date(2026, 5, 1); // 深耕开始（估算）
+  // 梅姐真实数据（2026-08-01基准）
+  const gaokao = new Date(2028, 5, 7);          // 高考日 2028-06-07 → 倒计时676天
+  const accompanyStart = new Date(2026, 2, 1);  // 陪读开始 2026-03-01 → 第154天
+  const deepworkStart = new Date(2023, 9, 14);  // 深耕开始 2023-10-14 → 第1022天
 
   const diffDays = (a, b) => Math.ceil((b - a) / (1000 * 60 * 60 * 24));
 
