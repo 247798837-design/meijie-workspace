@@ -9,6 +9,7 @@
 <meta name="theme-color" content="#b8860b">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="mei-logo-192.png">
+<script src="obsidian-sync.js"></script>
 <title>梅姐飞轮</title>
 <style>
 :root{
@@ -142,12 +143,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <div id="settingsModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeSettings()">
   <div class="modal">
     <h3 style="margin-bottom:16px">⚙️ 设置</h3>
-    <button class="btn btn-p" style="width:100%;margin-bottom:8px" onclick="exportData()">📥 导出数据 (JSON)</button>
+    <button class="btn btn-p" style="width:100%;margin-bottom:8px" onclick="exportData()">📥 导出数据 (JSON备份)</button>
     <button class="btn btn-o" style="width:100%;margin-bottom:8px" onclick="document.getElementById('importFile').click()">📤 导入数据</button>
     <input id="importFile" type="file" accept=".json" style="display:none" onchange="importData(event)">
+    <button class="btn btn-o" style="width:100%;margin-bottom:8px" onclick="exportMarkdown()">📝 导出Markdown (Obsidian)</button>
+    <button class="btn btn-s" style="width:100%;margin-bottom:8px" onclick="syncToCloud()">☁️ 同步到云端 (GitHub)</button>
+    <button class="btn btn-o" style="width:100%;margin-bottom:8px" onclick="syncFromCloud()">⬇️ 从云端下载</button>
     <button class="btn btn-r" style="width:100%;margin-bottom:8px" onclick="clearAll()">🗑️ 清除所有数据</button>
     <button class="btn btn-o" style="width:100%" onclick="closeSettings()">关闭</button>
-    <p id="storageInfo" style="font-size:11px;color:var(--ink3);margin-top:12px;text-align:center"></p>
+    <p id="syncStatus" style="font-size:11px;color:var(--sage);margin-top:8px;text-align:center"></p>
+    <p id="storageInfo" style="font-size:11px;color:var(--ink3);margin-top:4px;text-align:center"></p>
   </div>
 </div>
 
@@ -180,10 +185,12 @@ function navToPg(p){navTo(p)} // alias for onclick
 document.querySelectorAll('.tabbar button').forEach(b=>{b.onclick=()=>navTo(b.dataset.pg)});
 
 // ═══════════════════════════════════════════
-// DATE HELPERS
+// DATE HELPERS — 公式驱动，每天自动更新
 // ═══════════════════════════════════════════
+var ANCHOR={gaokao:new Date(2028,5,7),accompany:new Date(2026,2,1),deepwork:new Date(2023,9,15)};
+// 高考2028-06-07 | 陪读2026-03-01第1天 | 深耕2023-10-15第1天
 function today(){return new Date().toISOString().slice(0,10)}
-function fmt(d){const w=['日','一','二','三','四','五','六'];return d.getMonth()+1+'月'+d.getDate()+'日 周'+w[d.getDay()]}
+function fmt(d){var w=['日','一','二','三','四','五','六'];return d.getMonth()+1+'月'+d.getDate()+'日 周'+w[d.getDay()]}
 function countdown(target){return Math.ceil((target-new Date())/(86400000))}
 function daysSince(start){return Math.floor((new Date()-start)/(86400000))+1}
 
@@ -194,10 +201,10 @@ function renderHome(){
   const d=new Date();
   document.getElementById('topDate').textContent=fmt(d);
 
-  // Stats
-  const gk=countdown(new Date(2028,5,7));
-  const dw=daysSince(new Date(2023,9,14));
-  const pd=daysSince(new Date(2026,2,1));
+  // Stats — 公式驱动
+  var gk=countdown(ANCHOR.gaokao);
+  var dw=daysSince(ANCHOR.deepwork);
+  var pd=daysSince(ANCHOR.accompany);
   document.getElementById('homeStats').innerHTML=
     `<div class="stat"><b>${gk}</b><span>高考倒计时</span></div>`+
     `<div class="stat"><b>${dw}</b><span>深耕密码</span></div>`+
@@ -427,13 +434,13 @@ function importData(e){
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=function(ev){
-    try{state=JSON.parse(ev.target.result);save();load();renderAll();toast('数据已导入！')}catch(e){toast('文件格式错误')}
+    try{state=JSON.parse(ev.target.result);save();load();renderAll();syncObsidian();toast('数据已导入！')}catch(e){toast('文件格式错误')}
   };
   reader.readAsText(file);
 }
 function clearAll(){
   if(confirm('确定要清除所有数据吗？此操作不可恢复！\n建议先导出备份。')){
-    localStorage.removeItem(SK);state={};save();load();renderAll();toast('数据已清除');
+    localStorage.removeItem(SK);state={};save();load();renderAll();syncObsidian();toast('数据已清除');
   }
 }
 
@@ -467,7 +474,33 @@ if('serviceWorker' in navigator){
 // ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
-load();renderAll();
+load();renderAll();syncObsidian();
+
+// ═══════════════════════════════════════════
+// MARKDOWN EXPORT（导出给Obsidian）
+// ═══════════════════════════════════════════
+function exportMarkdown(){
+  var md='# 梅姐每日看板 '+today()+'\n\n';
+  var fw=ns('flywheel',{});var ms=ns('mindset',{});
+  md+='## 今日飞轮\n\n| 项目 | 内容 |\n|:---|:---|\n';
+  md+='| 写 | '+(fw.write||'—')+' |\n| 拍 | '+(fw.shoot||'—')+' |\n| 发 | '+(fw.publish||'—')+' |\n';
+  md+='| 连接 | '+(fw.connect||0)+'人 |\n| 需求 | '+(fw.need||0)+'人 |\n| 到账 | ¥'+(fw.income||0)+' |\n| 复盘 | '+(fw.review||'—')+' |\n';
+  md+='\n## 心态\n- 能量：'+(ms.energyScore||'—')+'分\n- 晨/晚：'+(ms.morningMood||'—')+'/'+(ms.nightMood||'—')+'\n- 阻力：'+((ms.resistances||[]).join('、')||'无')+'\n- 肯定语：'+(ms.affirmation||'—')+'\n';
+  var tasks=ns('tasks',[]);md+='\n## 行动清单\n';tasks.forEach(function(t,i){md+='- ['+(t.done?'x':' ')+'] '+t.text+' ('+(t.prio||'P2').toUpperCase()+')\n'});
+  var lc=ns('learningCard',{});if(lc.what)md+='\n## 学习卡\n- '+lc.what+' ('+lc.source+')\n- 心得：'+lc.insight+'\n- 应用：'+lc.apply+'\n';
+  var custs=ns('customerRecords',[]);if(custs.length){md+='\n## 客户\n';custs.forEach(function(c){md+='- '+c.name+' | '+c.stage+' | '+(c.product||'—')+'\n'})}
+  var blob=new Blob([md],{type:'text/markdown'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='梅姐看板-'+today()+'.md';a.click();toast('Markdown已导出！')}
+var GH={owner:'247798837-design',repo:'meijie-workspace',path:'data.json'};
+function ghToken(){
+  var t=localStorage.getItem('mei_gh_token');
+  if(!t){t=prompt('首次使用云同步，请输入GitHub Token');if(t)localStorage.setItem('mei_gh_token',t)}
+  return t}
+async function syncToCloud(){
+  var token=ghToken();if(!token)return;var s=document.getElementById('syncStatus');s.textContent='上传中…';
+  try{var sha='';try{var r=await fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+GH.path,{headers:{Authorization:'Bearer '+token}});if(r.ok){var d=await r.json();sha=d.sha}}catch(e){}var body={message:'phone sync '+new Date().toLocaleString(),content:btoa(unescape(encodeURIComponent(JSON.stringify(state,null,2))))};if(sha)body.sha=sha;r=await fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+GH.path,{method:'PUT',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(body)});if(r.ok){s.textContent='✅ 已同步';toast('同步成功！')}else{var e=await r.json();s.textContent='❌ '+e.message;toast('同步失败')}}catch(e){s.textContent='❌ 网络错误';toast('网络错误')}}
+async function syncFromCloud(){
+  var token=ghToken();if(!token)return;var s=document.getElementById('syncStatus');s.textContent='下载中…';
+  try{var r=await fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+GH.path,{headers:{Authorization:'Bearer '+token}});if(!r.ok){s.textContent='云端暂无数据';toast('请先上传');return}var d=await r.json();state=JSON.parse(decodeURIComponent(escape(atob(d.content))));save();load();renderAll();syncObsidian();s.textContent='✅ 已下载';toast('下载成功！')}catch(e){s.textContent='❌ 下载失败';toast('下载失败')}}
 </script>
 </body>
 </html>
