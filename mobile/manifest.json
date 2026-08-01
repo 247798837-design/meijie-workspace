@@ -1,0 +1,14 @@
+{
+  "name": "梅姐飞轮",
+  "short_name": "梅姐飞轮",
+  "description": "每日管理驾驶舱 - 心态·目标·客户·时间·行动·学习",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fbf7ee",
+  "theme_color": "#b8860b",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "mei-logo-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "mei-logo-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
