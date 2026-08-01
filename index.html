@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>梅姐飞轮 · 工作台</title>
+<meta name="description" content="梅姐·天赋成长 — 每日执行工作台。五项管理、AI内容工厂、品牌工具箱。">
+<style>
+  :root {
+    --paper: #fbf7ee;
+    --paper-soft: #f4efe4;
+    --paper-deep: #e8dfcc;
+    --card: #fffef9;
+    --ink: #2c2416;
+    --ink-2: #5c4f3a;
+    --ink-3: #8a7b65;
+    --gold: #b8860b;
+    --gold-light: #d4a843;
+    --gold-soft: rgba(184, 134, 11, 0.10);
+    --rose: #c77d7d;
+    --rose-soft: rgba(199, 125, 125, 0.08);
+    --jade: #5b8c6f;
+    --jade-soft: rgba(91, 140, 111, 0.08);
+    --rule: rgba(44, 36, 22, 0.12);
+    --shadow: 0 2px 16px rgba(44, 36, 22, 0.07);
+    --shadow-hover: 0 8px 32px rgba(44, 36, 22, 0.12);
+    --radius: 12px;
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --display: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--display);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(184, 134, 11, 0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(199, 125, 125, 0.03) 0%, transparent 60%);
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding: 56px 24px 40px;
+  }
+  .header-logo {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #d4a843, #b8860b);
+    color: #fff;
+    font-size: 32px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 4px 20px rgba(184, 134, 11, 0.25);
+    letter-spacing: -2px;
+  }
+  .header h1 {
+    font-size: 32px; font-weight: 700;
+    color: var(--ink);
+    letter-spacing: .04em;
+  }
+  .header p {
+    font-size: 16px; color: var(--ink-3);
+    margin-top: 8px;
+  }
+  .header .date {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 16px;
+    background: var(--gold-soft);
+    border-radius: 20px;
+    font-size: 14px; color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* ── Stats Bar ── */
+  .stats-bar {
+    display: flex; justify-content: center; gap: 24px;
+    flex-wrap: wrap;
+    max-width: 720px; margin: 0 auto 48px;
+    padding: 0 24px;
+  }
+  .stat-item {
+    text-align: center;
+    padding: 16px 24px;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    min-width: 120px;
+    border: 1px solid var(--rule);
+  }
+  .stat-num {
+    font-size: 28px; font-weight: 700;
+    color: var(--gold);
+  }
+  .stat-label {
+    font-size: 13px; color: var(--ink-3);
+    margin-top: 4px;
+  }
+
+  /* ── Section ── */
+  .section {
+    max-width: 960px; margin: 0 auto 48px;
+    padding: 0 24px;
+  }
+  .section-title {
+    font-size: 20px; font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+    letter-spacing: .03em;
+  }
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 20px;
+    border-radius: 2px;
+    background: var(--gold);
+  }
+
+  /* ── Tool Grid ── */
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .tool-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--rule);
+    transition: all .25s var(--ease);
+    position: relative;
+    overflow: hidden;
+  }
+  .tool-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--gold-light);
+  }
+  .tool-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    transition: height .25s var(--ease);
+  }
+  .tool-card:hover::before { height: 4px; }
+
+  .tool-card.panel::before { background: var(--gold); }
+  .tool-card.tool::before { background: var(--jade); }
+  .tool-card.brand::before { background: var(--rose); }
+
+  .tool-icon { font-size: 32px; margin-bottom: 14px; }
+  .tool-name { font-size: 18px; font-weight: 700; color: var(--ink); }
+  .tool-desc { font-size: 14px; color: var(--ink-3); margin-top: 6px; line-height: 1.5; }
+  .tool-tag {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px; font-weight: 600;
+  }
+  .tag-daily  { background: var(--gold-soft); color: var(--gold); }
+  .tag-tool   { background: var(--jade-soft); color: var(--jade); }
+  .tag-brand  { background: var(--rose-soft); color: var(--rose); }
+
+  /* ── Quick Links ── */
+  .quick-links {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    justify-content: center;
+  }
+  .quick-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 20px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 24px;
+    text-decoration: none;
+    color: var(--ink-2);
+    font-size: 14px;
+    font-weight: 600;
+    transition: all .2s var(--ease);
+  }
+  .quick-link:hover {
+    border-color: var(--gold-light);
+    color: var(--gold);
+    background: var(--gold-soft);
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--ink-3);
+    font-size: 13px;
+    border-top: 1px solid var(--rule);
+    margin-top: 24px;
+  }
+  .footer a { color: var(--gold); text-decoration: none; }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .header { padding: 40px 16px 28px; }
+    .header h1 { font-size: 26px; }
+    .tool-grid { grid-template-columns: 1fr; }
+    .stats-bar { gap: 12px; }
+    .stat-item { min-width: 90px; padding: 12px 16px; }
+    .stat-num { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ Header ═══ -->
+<header class="header">
+  <div class="header-logo">梅</div>
+  <h1>梅姐飞轮 · 工作台</h1>
+  <p>陪读妈妈 × 创业者 · 双轨并行执行系统</p>
+  <div class="date" id="todayDate"></div>
+</header>
+
+<!-- ═══ Stats Bar ═══ -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num" id="gaokaoDays">—</div>
+    <div class="stat-label">高考倒计时</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" id="deepworkDays">—</div>
+    <div class="stat-label">深耕天数</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" id="accompanyDays">—</div>
+    <div class="stat-label">陪读天数</div>
+  </div>
+</div>
+
+<!-- ═══ Panels ═══ -->
+<section class="section">
+  <h2 class="section-title">核心面板</h2>
+  <div class="tool-grid">
+    <a href="panels/five-mgmt/" class="tool-card panel">
+      <div class="tool-icon">📊</div>
+      <div class="tool-name">五项管理成长驾驶舱</div>
+      <div class="tool-desc">心态·目标·客户·时间·行动·学习，六维每日执行面板。Obsidian同步，飞轮闭环。</div>
+      <span class="tool-tag tag-daily">每日必用</span>
+    </a>
+    <a href="panels/five-mgmt/" class="tool-card panel">
+      <div class="tool-icon">🔄</div>
+      <div class="tool-name">每日闭环工作台</div>
+      <div class="tool-desc">晚间复盘·数据填报·明日计划生成。总统筹中控台。</div>
+      <span class="tool-tag tag-daily">每晚执行</span>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ Tools ═══ -->
+<section class="section">
+  <h2 class="section-title">工具箱</h2>
+  <div class="tool-grid">
+    <a href="tools/ai-pipeline/" class="tool-card tool">
+      <div class="tool-icon">🤖</div>
+      <div class="tool-name">AI 内容流水线</div>
+      <div class="tool-desc">DeepSeek + Codex + Hyper 三引擎，全自动视频制作可视化链路。</div>
+      <span class="tool-tag tag-tool">内容工厂</span>
+    </a>
+    <a href="tools/claude-zh/" class="tool-card tool">
+      <div class="tool-icon">🔧</div>
+      <div class="tool-name">Claude Desktop 中文补丁</div>
+      <div class="tool-desc">一键汉化 Claude Desktop。macOS &amp; Windows 双平台，自动备份可恢复。</div>
+      <span class="tool-tag tag-tool">开源工具</span>
+    </a>
+    <a href="#" class="tool-card tool" style="opacity:0.5; pointer-events:none;">
+      <div class="tool-icon">📹</div>
+      <div class="tool-name">视频号模板库</div>
+      <div class="tool-desc">Life·口播·融合短剧 三类视频模板，Hyperframes 动画引擎驱动。</div>
+      <span class="tool-tag tag-tool">即将上线</span>
+    </a>
+    <a href="#" class="tool-card tool" style="opacity:0.5; pointer-events:none;">
+      <div class="tool-icon">📱</div>
+      <div class="tool-name">小红书9图工厂</div>
+      <div class="tool-desc">生命数字系列9图模板，一键生成，品牌统一视觉。</div>
+      <span class="tool-tag tag-tool">即将上线</span>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ Brand Assets ═══ -->
+<section class="section">
+  <h2 class="section-title">品牌资产</h2>
+  <div class="tool-grid">
+    <a href="brand/media-kit/" class="tool-card brand">
+      <div class="tool-icon">🎨</div>
+      <div class="tool-name">媒体资料包</div>
+      <div class="tool-desc">梅姐个人形象、Logo、品牌色板、简介文案。对外合作即取即用。</div>
+      <span class="tool-tag tag-brand">品牌建设</span>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ Quick Links ═══ -->
+<section class="section">
+  <h2 class="section-title">快捷入口</h2>
+  <div class="quick-links">
+    <a href="https://chat.deepseek.com" class="quick-link" target="_blank" rel="noopener">🧠 DeepSeek</a>
+    <a href="https://claude.ai" class="quick-link" target="_blank" rel="noopener">🤖 Claude</a>
+    <a href="https://channels.weixin.qq.com" class="quick-link" target="_blank" rel="noopener">📺 视频号后台</a>
+    <a href="https://creator.xiaohongshu.com" class="quick-link" target="_blank" rel="noopener">📕 小红书创作者</a>
+    <a href="https://mp.weixin.qq.com" class="quick-link" target="_blank" rel="noopener">📝 公众号后台</a>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer class="footer">
+  梅姐飞轮 · 工作台 v1.0 &nbsp;|&nbsp;
+  <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a> &nbsp;|&nbsp;
+  每天进步一点点 🌱
+</footer>
+
+<script>
+  // Today's date
+  const d = new Date();
+  const week = ['日','一','二','三','四','五','六'];
+  document.getElementById('todayDate').textContent =
+    `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 · 星期${week[d.getDay()]}`;
+
+  // Countdown calculations
+  const gaokao = new Date(2027, 5, 7); // 2027年高考大致日期
+  const accompanyStart = new Date(2025, 8, 1); // 陪读开始
+  const deepworkStart = new Date(2026, 5, 1); // 深耕开始（估算）
+
+  const diffDays = (a, b) => Math.ceil((b - a) / (1000 * 60 * 60 * 24));
+
+  document.getElementById('gaokaoDays').textContent = diffDays(d, gaokao) + ' 天';
+  document.getElementById('deepworkDays').textContent = diffDays(deepworkStart, d) + ' 天';
+  document.getElementById('accompanyDays').textContent = diffDays(accompanyStart, d) + ' 天';
+</script>
+</body>
+</html>

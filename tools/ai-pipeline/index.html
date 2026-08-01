@@ -1,0 +1,148 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#060D1A;font-family:"SimSun","STSong","Times New Roman",serif}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden}
+.scene{position:absolute;inset:0;opacity:0;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#060D1A}
+.bg-grid{position:absolute;inset:0;z-index:0;opacity:.03;background-image:linear-gradient(rgba(0,229,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.4) 1px,transparent 1px);background-size:60px 60px}
+.bg-glow{position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(180px);opacity:.08;background:#00E5FF;top:30%;left:50%;transform:translate(-50%,-50%);z-index:0}
+@keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:.5}100%{transform:translateY(-800px) scale(0);opacity:0}}
+.p{position:absolute;border-radius:50%;z-index:1;pointer-events:none;animation:floatUp linear infinite}
+.p1{width:3px;height:3px;background:#00E5FF;left:10%;top:90%;animation-duration:7s;animation-delay:0s}
+.p2{width:2px;height:2px;background:#00D4FF;left:25%;top:85%;animation-duration:9s;animation-delay:-2s}
+.p3{width:4px;height:4px;background:#1A5CFF;left:45%;top:88%;animation-duration:6s;animation-delay:-4s}
+.p4{width:2px;height:2px;background:#00E5FF;left:60%;top:92%;animation-duration:10s;animation-delay:-1s}
+.p5{width:3px;height:3px;background:#00D4FF;left:78%;top:86%;animation-duration:8s;animation-delay:-5s}
+.p6{width:2px;height:2px;background:#1A5CFF;left:88%;top:91%;animation-duration:11s;animation-delay:-3s}
+.p7{width:3px;height:3px;background:#00E5FF;left:35%;top:94%;animation-duration:7s;animation-delay:-6s}
+.p8{width:2px;height:2px;background:#00D4FF;left:70%;top:89%;animation-duration:9s;animation-delay:-4s}
+.progress-bar{position:absolute;bottom:0;left:0;height:3px;background:linear-gradient(90deg,#00E5FF,#1A5CFF);z-index:100;width:0%}
+.s0-tag{font-size:26px;color:#00E5FF;font-weight:700;letter-spacing:.15em;margin-bottom:36px}
+.s0-title{font-size:68px;color:#FFF;font-weight:900;line-height:1.2;text-align:center;max-width:800px}
+.s0-sub{font-size:30px;color:rgba(255,255,255,.45);margin-top:32px}
+.s1-label,.s2-label,.s3-label{font-size:22px;font-weight:700;letter-spacing:.1em;margin-bottom:28px}
+.s1-label{color:#00E5FF}.s2-label{color:#1A5CFF}.s3-label{color:#00D4FF}
+.s1-chat{width:740px;background:rgba(8,18,36,.95);border:2px solid rgba(0,229,255,.18);border-radius:14px;padding:36px}
+.s1-msg{font-size:20px;color:#B0C4DE;line-height:1.8;margin-bottom:18px}
+.s1-msg.ai{color:#00E5FF;font-weight:600}
+.s2-editor{width:780px;background:rgba(8,14,28,.95);border:2px solid rgba(26,92,255,.22);border-radius:12px;overflow:hidden}
+.s2-editor-header{background:rgba(26,92,255,.12);padding:14px 24px;display:flex;align-items:center;gap:10px}
+.s2-dot{width:9px;height:9px;border-radius:50%}.s2-d1{background:#FF5F57}.s2-d2{background:#FFBD2E}.s2-d3{background:#27CA40}
+.s2-filename{color:rgba(255,255,255,.35);font-size:16px;margin-left:10px}
+.s2-code{font-family:"Consolas","Courier New",monospace;font-size:18px;color:#A0B8D0;line-height:1.65;padding:24px;min-height:340px}
+.s2-code .kw{color:#C792EA}.s2-code .fn{color:#82AAFF}.s2-code .str{color:#C3E88D}.s2-code .cm{color:#546E7A}
+.s3-preview{width:500px;height:880px;background:#000;border:3px solid rgba(0,212,255,.35);border-radius:18px;position:relative;overflow:hidden}
+.s3-preview-bar{position:absolute;bottom:0;left:0;right:0;height:4px;background:rgba(0,229,255,.25)}
+.s3-preview-progress{height:100%;background:#00E5FF;width:0%}
+.s3-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-left:44px solid rgba(255,255,255,.75);border-top:26px solid transparent;border-bottom:26px solid transparent}
+.s4-title{font-size:60px;color:#FFF;font-weight:900;text-align:center;max-width:800px;line-height:1.3}
+.s4-cta{font-size:26px;color:rgba(255,255,255,.45);margin-top:36px;display:flex;align-items:center;gap:14px}
+.s4-heart{color:#FF4757;font-size:32px}
+</style>
+</head>
+<body>
+<div data-hf-id="root" id="root" data-composition-id="main" data-start="0" data-duration="30" data-width="1080" data-height="1920">
+<audio id="narration" data-start="0" data-duration="30" data-track-index="2" src="narration.mp3" preload="auto"></audio>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="p p1"></div><div class="p p2"></div><div class="p p3"></div><div class="p p4"></div>
+<div class="p p5"></div><div class="p p6"></div><div class="p p7"></div><div class="p p8"></div>
+<div id="progress" class="progress-bar"></div>
+
+<div id="scene0" class="scene" data-scene="0">
+<div class="s0-tag s0-el">✦ AI PIPELINE</div>
+<div class="s0-title s0-el">DeepSeek + Codex + Hyper</div>
+<div class="s0-sub s0-el">三套AI　全自动做视频</div>
+</div>
+
+<div id="scene1" class="scene" data-scene="1">
+<div class="s1-label s1-el">⬡ DeepSeek V4 · 大脑层</div>
+<div class="s1-chat s1-el">
+<div class="s1-msg s1l">你是一个专业短视频分镜师…</div>
+<div class="s1-msg ai s1l">┃ 分镜1：科技风片头 3s</div>
+<div class="s1-msg ai s1l">┃ 分镜2：代码界面特写 4s</div>
+<div class="s1-msg ai s1l">┃ 分镜3：动态渲染预览 4s</div>
+</div>
+</div>
+
+<div id="scene2" class="scene" data-scene="2">
+<div class="s2-label s2-el">⬡ Codex · 画面层</div>
+<div class="s2-editor s2-el">
+<div class="s2-editor-header">
+<div class="s2-dot s2-d1"></div><div class="s2-dot s2-d2"></div><div class="s2-dot s2-d3"></div>
+<span class="s2-filename">animation.js</span>
+</div>
+<div class="s2-code">
+<span class="kw">import</span> { scene } <span class="kw">from</span> <span class="str">'hyperframes'</span><br>
+<span class="kw">const</span> <span class="fn">shot1</span> = () => {<br>
+&nbsp;&nbsp;<span class="fn">gsap</span>.<span class="fn">from</span>(<span class="str">'.title'</span>, {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;opacity: <span class="fn">0</span>, y: <span class="fn">60</span><br>
+&nbsp;&nbsp;})<br>
+}<br>
+<span class="cm">// 文字→动画代码 全自动</span>
+</div>
+</div>
+</div>
+
+<div id="scene3" class="scene" data-scene="3">
+<div class="s3-label s3-el">⬡ Hyper · 渲染层</div>
+<div class="s3-preview s3-el">
+<div class="s3-play" id="s3-play"></div>
+<div class="s3-preview-bar"><div class="s3-preview-progress" id="s3-progress"></div></div>
+</div>
+</div>
+
+<div id="scene4" class="scene" data-scene="4">
+<div class="s4-title s4-el">一套AI流水线<br>全自动做视频</div>
+<div class="s4-cta s4-el">
+<span class="s4-heart">♥</span> 点赞 · 收藏 · 学起来
+</div>
+</div>
+</div>
+
+<script>
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline();
+const R = '[data-composition-id="main"] ';
+
+tl.to(R+"#progress",{width:"100%",duration:29,ease:"none"},0);
+
+tl.set(R+"#scene0",{opacity:1},0);
+tl.from(R+".s0-el",{opacity:0,y:50,duration:.6,ease:"power3.out",stagger:.15},.3);
+tl.to(R+".s0-el",{opacity:0,duration:.4,stagger:.08},7.2);
+
+tl.set(R+"#scene0",{opacity:0},7.8);
+tl.set(R+"#scene1",{opacity:1},7.8);
+tl.from(R+".s1-el",{opacity:0,y:40,duration:.5,ease:"power3.out"},8.0);
+tl.from(R+".s1l",{opacity:0,x:-20,duration:.35,stagger:.35,ease:"power2.out"},8.3);
+tl.to(R+".s1-el",{opacity:0,duration:.35},13.9);
+tl.to(R+".s1l",{opacity:0,duration:.25},13.9);
+
+tl.set(R+"#scene1",{opacity:0},14.5);
+tl.set(R+"#scene2",{opacity:1},14.5);
+tl.from(R+".s2-el",{opacity:0,scale:.95,duration:.5,ease:"power3.out"},14.7);
+tl.to(R+".s2-el",{opacity:0,duration:.35},20.1);
+
+tl.set(R+"#scene2",{opacity:0},20.7);
+tl.set(R+"#scene3",{opacity:1},20.7);
+tl.from(R+".s3-el",{opacity:0,scale:.9,duration:.5,ease:"back.out(1.4)"},20.8);
+tl.to(R+"#s3-progress",{width:"85%",duration:2.5,ease:"power2.inOut"},21.2);
+tl.fromTo(R+"#s3-play",{scale:1},{scale:1.2,duration:.4,ease:"power2.out",repeat:1,yoyo:true},21.5);
+tl.to(R+".s3-el",{opacity:0,duration:.3},23.9);
+
+tl.set(R+"#scene3",{opacity:0},24.5);
+tl.set(R+"#scene4",{opacity:1},24.5);
+tl.from(R+".s4-el",{opacity:0,y:60,duration:.6,ease:"power3.out",stagger:.2},24.6);
+tl.to(R+".s4-el",{opacity:0,duration:.5},28.0);
+tl.to(R+"#progress",{opacity:0,duration:.3},28.3);
+tl.to(R+"#root",{opacity:0,duration:.5},28.5);
+
+window.__timelines["main"] = tl;
+</script>
+</body>
+</html>
