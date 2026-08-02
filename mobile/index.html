@@ -912,7 +912,7 @@ async function syncFromCloud(){
 // ═══════════════════════════════════════════
 async function autoLoadData(){
   try{
-    const r=await fetch('data.json?'+Date.now());
+    const r=await fetch('../data.json?'+Date.now());
     if(!r.ok)return;
     const d=await r.json();
     // Merge into state (don't overwrite user's manual inputs)

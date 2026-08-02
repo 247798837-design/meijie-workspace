@@ -1,7 +1,7 @@
 {
   "_version": 2,
-  "_generated": "2026-08-02T08:00:00",
-  "_source": "D盘梅姐飞轮知识库自动提取",
+  "_generated": "2026-08-02T10:00:00",
+  "_source": "D盘台账自动提取 · 08-六项管理/台账/",
 
   "todayDate": "2026-08-02",
   "todayMeta": {
@@ -14,106 +14,46 @@
 
   "cockpit": {
     "todayGoals": [
-      {"prio": "P0", "text": "完成幸福人生生日共创Day1·记录寿星和互动反馈", "from": "六项计划"},
-      {"prio": "P1", "text": "审看学习卡测试问题·确认后小范围试用", "from": "六项计划"},
-      {"prio": "P2", "text": "完成儿子一个暑假学习小任务", "from": "六项计划"}
+      {"prio": "P0", "text": "19:00完成幸福人生生日共创Day1", "from": "当日明确任务"},
+      {"prio": "P1", "text": "审看《真实表达不是为了赢》测试问题·确认后小范围试用", "from": "当日明确任务"},
+      {"prio": "P2", "text": "完成一个儿子暑假学习小任务+家庭交流", "from": "当日明确任务"}
+    ],
+    "todayDontDo": [
+      "不批量生成视频/公众号/小红书/朋友圈",
+      "觉醒计划周日休息·不执行工作日七项",
+      "不直接用冲突价格报价"
     ],
     "yesterdayHandoff": {
       "date": "2026-08-01",
+      "summary": "海报和内容双线作战——海报100%交付，内驱1-9内容体系0→1搭建完成。缺口：内容发布窗口被海报挤占。",
+      "biggestGap": "海报占据全部白天，内容发布窗口全部错过",
+      "oneFix": "内容发布窗口神圣化——12:00/19:00/20:00不因内部制作挪动",
       "tomorrowGoals": [
-        {"prio": "P0", "text": "小杰合成1分钟总视频→梅姐验收→发布视频号", "from": "每日复盘"},
-        {"prio": "P1", "text": "公众号长文排版+小红书九图发布", "from": "每日复盘"},
-        {"prio": "P2", "text": "五数补填+面板导出+教育基金启动", "from": "每日复盘"}
+        {"prio": "P0", "text": "小杰合成1分钟总视频→梅姐验收→发布视频号", "from": "每日复盘·明日行动"},
+        {"prio": "P1", "text": "公众号长文排版+小红书九图发布", "from": "每日复盘·明日行动"},
+        {"prio": "P2", "text": "五数补填+面板导出+教育基金启动", "from": "每日复盘·明日行动"}
       ]
     }
   },
 
   "projects": [
-    {
-      "id": "P-MEJIE-FLYWHEEL", "name": "梅姐飞轮", "type": "个人IP核心经营",
-      "status": "active", "priority": "P0", "goal": "月入¥10,000",
-      "thisWeek": "内驱1-9内容体系发布+幸福人生三期启动",
-      "todayAction": "审看学习卡测试问题·确认后小范围试用",
-      "incomeLine": "meijie"
-    },
-    {
-      "id": "P-AWAKENING", "name": "觉醒计划·星火组", "type": "驿马善琰·组长管理",
-      "status": "active", "priority": "P1", "goal": "完成组长每日职责+学员帮扶",
-      "thisWeek": "W4周榜+7月月榜全部交付",
-      "todayAction": "周日无课·按需执行", "incomeLine": "yima"
-    },
-    {
-      "id": "P-HAPPINESS", "name": "幸福人生·三期", "type": "驿马善琰·社群裂变",
-      "status": "active", "priority": "P1", "goal": "完成社群运营+成交转化",
-      "thisWeek": "8/2正式开营",
-      "todayAction": "19:00生日共创Day1", "incomeLine": "yima"
-    },
-    {
-      "id": "P-FAMILY-STUDY", "name": "家庭陪读", "type": "家庭项目",
-      "status": "active", "priority": "P1", "goal": "儿子高一·暑假学习+日本留学准备",
-      "todayAction": "完成一个儿子学习小任务+家庭交流", "incomeLine": null
-    }
+    {"id":"P-MEJIE-FLYWHEEL","name":"梅姐飞轮","type":"个人IP","status":"active","priority":"P0","goal":"月入¥10,000","thisWeek":"内驱1-9发布+学习卡测试","todayAction":"审看测试问题","blocker":null,"nextStep":"小杰合成总视频→发布→收集反馈","incomeLine":"meijie","lastReview":"2026-08-01"},
+    {"id":"P-HAPPINESS","name":"幸福人生·三期","type":"驿马·社群","status":"active","priority":"P0","goal":"社群运营+成交转化","thisWeek":"8/2正式开营Day1","todayAction":"19:00生日共创·记录寿星+互动","blocker":null,"nextStep":"核对五问与寿星名单·活动后意向记录","incomeLine":"yima","lastReview":null},
+    {"id":"P-AWAKENING","name":"觉醒计划·星火组","type":"驿马·组长","status":"active","priority":"P1","goal":"组长职责+学员帮扶","thisWeek":"W4周榜+月榜全部交付","todayAction":"周日休息·无课","blocker":null,"nextStep":"周一恢复·确认D22安排","incomeLine":"yima","lastReview":"2026-08-01"},
+    {"id":"P-FAMILY-STUDY","name":"家庭陪读","type":"家庭","status":"active","priority":"P1","goal":"儿子高一·暑假学习","thisWeek":"暑假日常陪伴","todayAction":"完成一个学习小任务+家庭交流","blocker":null,"nextStep":"确认最小学习任务","incomeLine":null,"lastReview":null}
   ],
 
   "revenueCards": [
-    {
-      "id": "rc_d21", "sourceCard": "D21·双师制与团队补位",
-      "userProblem": "讲课是把知识传出去，辅导是陪学员把知识变成能力",
-      "stage": "verified", "userQuotes": [],
-      "nextStep": "完成一次倾听并记录原话",
-      "contentStatus": "已生成视频号脚本+公众号长文+小红书方案",
-      "matchedProduct": "待确认", "revenueLine": "meijie", "actualIncome": 0
-    },
-    {
-      "id": "rc_real", "sourceCard": "真实表达不是为了赢",
-      "userProblem": "因为怕别人不高兴，把想说的话咽回去",
-      "stage": "testing", "userQuotes": [],
-      "nextStep": "梅姐审看测试问题→社群小范围试用→收集用户原话",
-      "contentStatus": "", "matchedProduct": "待确认", "revenueLine": "meijie", "actualIncome": 0
-    },
-    {
-      "id": "rc_drive", "sourceCard": "姓名内驱数字1-9",
-      "userProblem": "不同内驱数字的人，真正想要的东西不一样",
-      "stage": "amplified", "userQuotes": [],
-      "nextStep": "小杰合成总视频→梅姐验收发布→收集评论反馈",
-      "contentStatus": "9条视频+公众号+小红书已完成",
-      "matchedProduct": "9.9定位卡", "revenueLine": "meijie", "actualIncome": 0
-    }
+    {"id":"rc_d21","sourceCard":"D21·双师制与团队补位","userProblem":"讲课是传知识，辅导是陪学员把知识变成能力","stage":"amplified","nextStep":"小杰合成总视频→验收发布→收集评论","contentStatus":"视频×9+公众号+小红书已完成","matchedProduct":"9.9定位卡","revenueLine":"meijie","actualIncome":0},
+    {"id":"rc_real","sourceCard":"真实表达不是为了赢","userProblem":"怕别人不高兴而把想说的话咽回去","stage":"testing","nextStep":"梅姐审看→社群小范围测试→收集用户原话","contentStatus":"","matchedProduct":"待确认","revenueLine":"meijie","actualIncome":0},
+    {"id":"rc_drive","sourceCard":"姓名内驱数字1-9","userProblem":"不同内驱数字的人想要的不一样","stage":"amplified","nextStep":"发布→收集评论反馈","contentStatus":"9条视频+长文+九图已完成","matchedProduct":"9.9定位卡","revenueLine":"meijie","actualIncome":0}
   ],
 
   "learningCards": [
-    {
-      "id": "lc_real_demand", "date": "2026-07-22",
-      "title": "穿透表象，看见真实需求",
-      "source": "觉醒计划腾讯会议纪要",
-      "core": "先倾听原话和情绪，再通过提问、观察与小行动验证真实需求",
-      "application": "选择一位真实沟通对象，完成一次不急着给答案的倾听",
-      "status": "已应用"
-    },
-    {
-      "id": "lc_team", "date": "2026-07-27",
-      "title": "团队协作：从单打独斗到共同托举",
-      "source": "觉醒计划全员复盘会议纪要",
-      "core": "真正的团队要围绕共同目标开展真实沟通、共同分工与相互托举",
-      "application": "与1位活跃伙伴和1位沉默伙伴各完成一次15分钟倾听",
-      "status": "待应用"
-    },
-    {
-      "id": "lc_d21", "date": "2026-08-01",
-      "title": "D21·双师制与团队补位",
-      "source": "觉醒计划课程",
-      "core": "讲课是把知识传出去，辅导是陪学员把知识变成能力",
-      "application": "梳理姓名内驱入门营与进阶营框架",
-      "status": "已转化内容"
-    },
-    {
-      "id": "lc_real", "date": "2026-08-02",
-      "title": "真实表达不是为了赢",
-      "source": "今日学习卡",
-      "core": "怕别人不高兴而压抑表达→测试问题：你有没有因为怕别人不高兴把想说的话咽回去？",
-      "application": "社群/朋友圈小范围测试→收集用户原话→形成问题解决卡",
-      "status": "测试中"
-    }
+    {"id":"LC01","date":"2026-07-22","title":"穿透表象，看见真实需求","source":"觉醒计划会议纪要","core":"先倾听原话和情绪，再通过提问验证真实需求","status":"已应用"},
+    {"id":"LC02","date":"2026-07-27","title":"团队协作：从单打独斗到共同托举","source":"觉醒计划全员复盘","core":"围绕共同目标开展真实沟通与相互托举","status":"待应用"},
+    {"id":"LC03","date":"2026-08-01","title":"D21·双师制与团队补位","source":"觉醒计划课程","core":"讲课是传知识，辅导是陪学员把知识变成能力","status":"已转化内容"},
+    {"id":"LC04","date":"2026-08-02","title":"真实表达不是为了赢","source":"今日学习卡","core":"怕别人不高兴而压抑表达→测试真实回应","status":"测试中"}
   ],
 
   "customerRecords": [],
@@ -122,11 +62,11 @@
     "meijie": {
       "label": "梅姐个人收入",
       "deals": [
-        {"date": "2026-03", "desc": "历史收入", "amount": 1573},
-        {"date": "2026-04", "desc": "李立凤·导师班佣金", "amount": 13000},
-        {"date": "2026-04", "desc": "其他9笔历史成交", "amount": 1372},
-        {"date": "2026-05", "desc": "999创富营+365年卡", "amount": 1864},
-        {"date": "2026-06", "desc": "199产品+999佣金", "amount": 598.60}
+        {"date":"2026-03","desc":"历史收入","amount":1573},
+        {"date":"2026-04","desc":"李立凤·导师班佣金","amount":13000},
+        {"date":"2026-04","desc":"其他9笔历史成交","amount":1372},
+        {"date":"2026-05","desc":"999创富营+365年卡","amount":1864},
+        {"date":"2026-06","desc":"199产品+999佣金","amount":598.60}
       ],
       "totalIncome": 18407.60
     },
@@ -136,28 +76,6 @@
       "totalRevenue": 0,
       "meijieShare": 0
     }
-  },
-
-  "yesterdayReview": {
-    "date": "2026-08-01",
-    "summary": "海报和内容双线作战——海报100%交付，内驱1-9内容体系从0到1搭建完成。唯一缺口：内容发布窗口被海报挤占。",
-    "top3Results": [
-      "觉醒计划表彰海报全交付·统一模板+自动化脚本",
-      "内驱1-9内容体系0→1·9条视频+公众号+小红书",
-      "系统架构升级完成·完整个人成长飞轮"
-    ],
-    "biggestGap": "海报占据全部白天，内容发布窗口全部错过",
-    "oneFix": "内容发布窗口神圣化——不因内部制作任务挪动"
-  },
-
-  "todayPlan": {
-    "source": "六项计划_20260802.md",
-    "principle": "学习卡测试、获客、私域承接、产品匹配、成交到账和交付反馈必须连起来",
-    "todayResults": [
-      {"project": "幸福人生", "result": "19:00完成生日共创Day 1", "status": "待做"},
-      {"project": "梅姐飞轮", "result": "审看测试问题·确认后小范围试用", "status": "待做"},
-      {"project": "家庭暑假", "result": "完成一个儿子学习小任务", "status": "待做"}
-    ]
   },
 
   "keyMetrics": {
