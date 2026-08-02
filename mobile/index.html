@@ -789,40 +789,57 @@ function saveLearningCard(){
 // ── ⑥ 晚间复盘 ──
 function renderReview(){
   document.getElementById('reviewDate').textContent=today();
-  const cr=ns('customerRecords',[]),rc=ns('revenueCards',[]),da=ns('dualAccounts',{meijie:{totalIncome:0},yima:{meijieShare:0}});
-  document.getElementById('reviewSummary').innerHTML=
-    '<div class="kpi"><span>今日任务</span><b>'+(state.tasks||[]).filter(t=>t.done).length+'/'+(state.tasks||[]).length+'</b></div>'+
-    '<div class="kpi"><span>飞轮主题</span><b>'+rc.length+'个</b></div>'+
-    '<div class="kpi"><span>跟进客户</span><b>'+cr.filter(c=>c.stage!=='S5').length+'人</b></div>'+
-    '<div class="kpi"><span>个人到账</span><b>¥'+(da.meijie.totalIncome||0).toLocaleString()+'</b></div>';
 
-  // Load existing review
+  // Collect all today's data
+  const cr=ns('customerRecords',[]),rc=ns('revenueCards',[]);
+  const da=ns('dualAccounts',{meijie:{totalIncome:0},yima:{meijieShare:0}});
+  const tk=state.tasks||[],ms=ns('mindset',{});
+
+  // Auto-generate review summary
+  const done=tk.filter(t=>t.done).length,total=tk.length||1;
+  const todayCustomers=cr.filter(c=>c.updated===today()||c.added===today());
+  const todayRC=rc.filter(r=>r.updated===today());
+  const incomeToday=((da.meijie.deals||[]).filter(d=>d.date===today()).reduce((s,d)=>s+(d.amount||0),0))+((da.yima.deals||[]).filter(d=>d.date===today()).reduce((s,d)=>s+(d.amount||0),0));
+
+  document.getElementById('reviewSummary').innerHTML=
+    '<div class="kpi"><span>任务完成</span><b>'+done+'/'+total+'</b></div>'+
+    '<div class="kpi"><span>今日新增客户</span><b>'+todayCustomers.length+'人</b></div>'+
+    '<div class="kpi"><span>飞轮主题推进</span><b>'+todayRC.length+'个</b></div>'+
+    '<div class="kpi"><span>今日到账</span><b>¥'+incomeToday.toLocaleString()+'</b></div>';
+
+  // Auto-generate review text from data
+  const autoMindset=ms.energyScore?'能量'+ms.energyScore+'分'+(ms.resistances&&ms.resistances.length?'·阻力：'+ms.resistances.join('、'):''):'';
+  const autoLearning=rc.filter(r=>r.stage==='testing'||r.stage==='verified').map(r=>r.sourceCard+'→'+(r.stage==='testing'?'测试中':'已验证')).join('；')||'';
+  const autoGoals=tk.filter(t=>t.done).map(t=>'✅ '+t.text).join('；')||(tk.length?'完成'+done+'/'+total:'');
+  const autoAction=tk.filter(t=>t.done).slice(0,1).map(t=>t.text).join('')||'';
+  const autoCustomers=todayCustomers.map(c=>c.name+' '+(c.stage||'')+' → '+(c.nextAction||'')).join('；')||'';
+  const autoGap=tk.filter(t=>!t.done).map(t=>t.text).join('；')||'';
+
+  // Load existing or auto-fill
   const ho=ns('eveningHandoff',{});
-  if(ho.date===today()){
-    document.getElementById('rvMindset').value=ho.mindset||'';
-    document.getElementById('rvLearning').value=ho.learning||'';
-    document.getElementById('rvGoals').value=ho.goals||'';
-    document.getElementById('rvAction').value=ho.action||'';
-    document.getElementById('rvTime').value=ho.time||'';
-    document.getElementById('rvCustomers').value=ho.customers||'';
-    document.getElementById('rvGap').value=ho.gap||'';
-    document.getElementById('rvKeep').value=ho.keep||'';
-    document.getElementById('rvAdjust').value=ho.adjust||'';
-    document.getElementById('rvStop').value=ho.stop||'';
-    document.getElementById('rvP0').value=(ho.tomorrowGoals||[]).find(g=>g.prio==='P0')?.text||'';
-    document.getElementById('rvP1').value=(ho.tomorrowGoals||[]).find(g=>g.prio==='P1')?.text||'';
-    document.getElementById('rvP2').value=(ho.tomorrowGoals||[]).find(g=>g.prio==='P2')?.text||'';
-    document.getElementById('handoffStatus').textContent='已确认 · 明日可读取';
-  }else{
-    // Auto-suggest P0/P1/P2
-    const undone=state.tasks?.filter(t=>!t.done).map(t=>t.text)||[];
+  const isNew=ho.date!==today();
+
+  document.getElementById('rvMindset').value=ho.mindset||autoMindset;
+  document.getElementById('rvLearning').value=ho.learning||autoLearning;
+  document.getElementById('rvGoals').value=ho.goals||autoGoals;
+  document.getElementById('rvAction').value=ho.action||autoAction;
+  document.getElementById('rvTime').value=ho.time||'';
+  document.getElementById('rvCustomers').value=ho.customers||autoCustomers;
+  document.getElementById('rvGap').value=ho.gap||autoGap;
+  document.getElementById('rvKeep').value=ho.keep||(tk.filter(t=>t.done).map(t=>t.text).join('；'));
+  document.getElementById('rvAdjust').value=ho.adjust||'';
+  document.getElementById('rvStop').value=ho.stop||'';
+
+  // Auto-suggest tomorrow P0/P1/P2
+  if(isNew){
+    const undone=tk.filter(t=>!t.done).map(t=>t.text);
     const custNext=cr.filter(c=>c.nextDate&&c.stage!=='S5').sort((a,b)=>new Date(a.nextDate)-new Date(b.nextDate))[0];
     const rcNext=rc.filter(r=>r.stage!=='delivered'&&r.nextStep).slice(0,1);
     document.getElementById('rvP0').value=undone[0]||'';
-    document.getElementById('rvP1').value=custNext?(custNext.name+': '+custNext.nextAction):'';
-    document.getElementById('rvP2').value=rcNext[0]?.nextStep||'';
-    document.getElementById('handoffStatus').textContent='请填写复盘后确认交接';
+    document.getElementById('rvP1').value=custNext?(custNext.name+'·'+custNext.nextAction):'';
+    document.getElementById('rvP2').value=rcNext[0]?(rcNext[0].sourceCard+'·'+rcNext[0].nextStep):'';
   }
+  document.getElementById('handoffStatus').textContent=isNew?'🤖 已自动生成 · 请确认后保存':'✅ 已确认 · 明早可读取';
 }
 
 function confirmHandoff(){
