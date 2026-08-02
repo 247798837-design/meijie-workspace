@@ -131,24 +131,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <!-- ⑥ 晚间复盘 -->
 <section id="pg-review" class="page">
   <div class="card"><div class="card-hd">📊 今日概览 <span class="badge" id="reviewDate"></span></div><div class="kpi-grid" id="reviewSummary"></div></div>
-  <div class="card"><div class="card-hd">✍️ 六项复盘</div>
-    <div class="fld"><label>💚 心态：今天最大的阻力/调整</label><input id="rvMindset" placeholder="例：害怕成交→主动聊了一个"></div>
-    <div class="fld"><label>📖 学习：学习卡是否转化应用？</label><input id="rvLearning" placeholder="哪张卡？用在哪？结果？"></div>
-    <div class="fld"><label>🎯 目标：今天的主目标完成了吗？</label><input id="rvGoals" placeholder="完成/未完成，原因"></div>
-    <div class="fld"><label>⚡ 行动：今天最有效的一个动作</label><input id="rvAction" placeholder="什么动作真正推进了结果？"></div>
-    <div class="fld"><label>⏰ 时间：哪个块被打断？明天怎么调？</label><input id="rvTime" placeholder="时间分配"></div>
-    <div class="fld"><label>💰 客户：漏斗推到哪步？明天补哪环？</label><input id="rvCustomers" placeholder="客户推进"></div>
+  <div id="autoReviewReport"></div>
+  <div class="card" id="reviewEditCard" style="display:none">
+    <div class="card-hd">✏️ 补充感受（可选·只有系统不知道的才填）</div>
+    <div class="fld"><label>今天最大的心理感受</label><textarea id="rvFeeling" rows="2" placeholder="例：虽然忙但心里踏实"></textarea></div>
+    <div class="fld"><label>明天想调整什么</label><input id="rvAdjust" placeholder="不想调整就留空"></div>
   </div>
-  <div class="card"><div class="card-hd">🔮 明日交接</div>
-    <div class="fld"><label>今日最大断点</label><input id="rvGap" placeholder="哪里卡住了？"></div>
-    <div class="fld"><label>明日保留</label><input id="rvKeep" placeholder="继续做什么"></div>
-    <div class="fld"><label>明日调整</label><input id="rvAdjust" placeholder="怎么改"></div>
-    <div class="fld"><label>明日停止</label><input id="rvStop" placeholder="停掉什么"></div>
-    <div class="fld"><label>明日P0（最重要的结果）</label><input id="rvP0" placeholder="必须完成的一件事"></div>
-    <div class="fld"><label>明日P1（推进成交/客户）</label><input id="rvP1" placeholder="离钱最近的动作"></div>
-    <div class="fld"><label>明日P2（公司职责/交付）</label><input id="rvP2" placeholder="不能拖延的交付"></div>
-    <button class="btn btn-p" style="width:100%" onclick="confirmHandoff()">✅ 确认明日交接</button>
-    <button class="btn btn-o" style="width:100%;margin-top:6px" onclick="exportReviewToObsidian()">📝 导出复盘→同步回Obsidian</button>
+  <div class="card">
+    <button class="btn btn-p" style="width:100%" onclick="confirmHandoff()">✅ 确认复盘·生成明日交接</button>
+    <button class="btn btn-o" style="width:100%;margin-top:6px" onclick="document.getElementById('reviewEditCard').style.display='block'">✏️ 补充一句感受</button>
+    <button class="btn btn-o" style="width:100%;margin-top:6px" onclick="exportReviewToObsidian()">📝 同步回Obsidian</button>
     <p id="handoffStatus" style="font-size:11px;color:var(--sage);margin-top:6px;text-align:center"></p>
   </div>
 </section>
@@ -789,57 +781,75 @@ function saveLearningCard(){
 // ── ⑥ 晚间复盘 ──
 function renderReview(){
   document.getElementById('reviewDate').textContent=today();
-
-  // Collect all today's data
   const cr=ns('customerRecords',[]),rc=ns('revenueCards',[]);
-  const da=ns('dualAccounts',{meijie:{totalIncome:0},yima:{meijieShare:0}});
+  const da=ns('dualAccounts',{meijie:{totalIncome:0,deals:[]},yima:{meijieShare:0,deals:[]}});
   const tk=state.tasks||[],ms=ns('mindset',{});
 
-  // Auto-generate review summary
+  const todayDeals=[...(da.meijie.deals||[]).filter(d=>d.date===today()),...(da.yima.deals||[]).filter(d=>d.date===today())];
+  const incomeToday=todayDeals.reduce((s,d)=>s+(d.amount||0),0);
   const done=tk.filter(t=>t.done).length,total=tk.length||1;
-  const todayCustomers=cr.filter(c=>c.updated===today()||c.added===today());
+  const todayCust=cr.filter(c=>c.updated===today()||c.added===today());
   const todayRC=rc.filter(r=>r.updated===today());
-  const incomeToday=((da.meijie.deals||[]).filter(d=>d.date===today()).reduce((s,d)=>s+(d.amount||0),0))+((da.yima.deals||[]).filter(d=>d.date===today()).reduce((s,d)=>s+(d.amount||0),0));
+  const undone=tk.filter(t=>!t.done).map(t=>t.text);
+  const custNext=cr.filter(c=>c.nextDate&&c.stage!=='S5').sort((a,b)=>new Date(a.nextDate)-new Date(b.nextDate))[0];
 
   document.getElementById('reviewSummary').innerHTML=
     '<div class="kpi"><span>任务完成</span><b>'+done+'/'+total+'</b></div>'+
-    '<div class="kpi"><span>今日新增客户</span><b>'+todayCustomers.length+'人</b></div>'+
-    '<div class="kpi"><span>飞轮主题推进</span><b>'+todayRC.length+'个</b></div>'+
+    '<div class="kpi"><span>新增客户</span><b>'+todayCust.length+'人</b></div>'+
+    '<div class="kpi"><span>推进主题</span><b>'+todayRC.length+'个</b></div>'+
     '<div class="kpi"><span>今日到账</span><b>¥'+incomeToday.toLocaleString()+'</b></div>';
 
-  // Auto-generate review text from data
-  const autoMindset=ms.energyScore?'能量'+ms.energyScore+'分'+(ms.resistances&&ms.resistances.length?'·阻力：'+ms.resistances.join('、'):''):'';
-  const autoLearning=rc.filter(r=>r.stage==='testing'||r.stage==='verified').map(r=>r.sourceCard+'→'+(r.stage==='testing'?'测试中':'已验证')).join('；')||'';
-  const autoGoals=tk.filter(t=>t.done).map(t=>'✅ '+t.text).join('；')||(tk.length?'完成'+done+'/'+total:'');
-  const autoAction=tk.filter(t=>t.done).slice(0,1).map(t=>t.text).join('')||'';
-  const autoCustomers=todayCustomers.map(c=>c.name+' '+(c.stage||'')+' → '+(c.nextAction||'')).join('；')||'';
-  const autoGap=tk.filter(t=>!t.done).map(t=>t.text).join('；')||'';
-
-  // Load existing or auto-fill
+  // Auto-generate complete review report
   const ho=ns('eveningHandoff',{});
-  const isNew=ho.date!==today();
+  const isConfirmed=ho.date===today();
+  const energyLine=ms.energyScore?'⚡ 能量 '+ms.energyScore+'/10'+(ms.resistances&&ms.resistances.length?' · 阻力：'+ms.resistances.join('、'):''):'⚡ 今日未记录能量';
+  const learnLine=rc.filter(r=>r.stage==='testing'||r.stage==='verified').length?'📖 验证中的学习卡：'+rc.filter(r=>r.stage==='testing'||r.stage==='verified').map(r=>r.sourceCard+'（'+(r.stage==='testing'?'测试中':'已验证')+'）').join('、'):'📖 今日无新增验证';
+  const goalLine='🎯 已完成：'+tk.filter(t=>t.done).map(t=>t.text).join('、')+(undone.length?' · 未完成：'+undone.join('、'):'');
+  const actionLine='⚡ 最有效动作：'+(tk.filter(t=>t.done)[0]?.text||'待记录');
+  const custLine='💰 客户推进：'+(todayCust.length?todayCust.map(c=>c.name+'（'+(c.stage||'S0')+'）→ '+c.nextAction).join('；'):'今日无新增客户互动');
+  const gapLine=undone.length?'🔮 今日断点：'+undone.join('、'):'🔮 今日无断点';
 
-  document.getElementById('rvMindset').value=ho.mindset||autoMindset;
-  document.getElementById('rvLearning').value=ho.learning||autoLearning;
-  document.getElementById('rvGoals').value=ho.goals||autoGoals;
-  document.getElementById('rvAction').value=ho.action||autoAction;
-  document.getElementById('rvTime').value=ho.time||'';
-  document.getElementById('rvCustomers').value=ho.customers||autoCustomers;
-  document.getElementById('rvGap').value=ho.gap||autoGap;
-  document.getElementById('rvKeep').value=ho.keep||(tk.filter(t=>t.done).map(t=>t.text).join('；'));
-  document.getElementById('rvAdjust').value=ho.adjust||'';
-  document.getElementById('rvStop').value=ho.stop||'';
+  // Tomorrow suggestions
+  const suggestP0=undone[0]||'继续推进今日主目标';
+  const suggestP1=custNext?(custNext.name+'：'+custNext.nextAction):'私聊触达5人·推动至少1人进入深聊';
+  const suggestP2=rc.filter(r=>r.stage!=='delivered'&&r.nextStep).slice(0,1).map(r=>r.sourceCard+'：'+r.nextStep)[0]||'完成当日学习卡应用';
 
-  // Auto-suggest tomorrow P0/P1/P2
-  if(isNew){
-    const undone=tk.filter(t=>!t.done).map(t=>t.text);
-    const custNext=cr.filter(c=>c.nextDate&&c.stage!=='S5').sort((a,b)=>new Date(a.nextDate)-new Date(b.nextDate))[0];
-    const rcNext=rc.filter(r=>r.stage!=='delivered'&&r.nextStep).slice(0,1);
-    document.getElementById('rvP0').value=undone[0]||'';
-    document.getElementById('rvP1').value=custNext?(custNext.name+'·'+custNext.nextAction):'';
-    document.getElementById('rvP2').value=rcNext[0]?(rcNext[0].sourceCard+'·'+rcNext[0].nextStep):'';
-  }
-  document.getElementById('handoffStatus').textContent=isNew?'🤖 已自动生成 · 请确认后保存':'✅ 已确认 · 明早可读取';
+  document.getElementById('autoReviewReport').innerHTML=
+    '<div class="card" style="border-left:3px solid var(--sage)"><div class="card-hd">🤖 自动生成复盘报告 '+(isConfirmed?'<span class="badge">已确认</span>':'<span class="badge">待确认</span>')+'</div>'+
+    '<div style="line-height:1.8;font-size:14px">'+
+    '<p>'+energyLine+'</p>'+
+    '<p>'+learnLine+'</p>'+
+    '<p>'+goalLine+'</p>'+
+    '<p>'+actionLine+'</p>'+
+    '<p>'+custLine+'</p>'+
+    '<p>'+gapLine+'</p>'+
+    '<div style="margin-top:10px;padding:8px;background:var(--paper2);border-radius:8px">'+
+    '<b>📋 建议明日P0：</b>'+suggestP0+'<br>'+
+    '<b>📋 建议明日P1：</b>'+suggestP1+'<br>'+
+    '<b>📋 建议明日P2：</b>'+suggestP2+
+    '</div></div></div>';
+
+  document.getElementById('handoffStatus').textContent=isConfirmed?'✅ 已确认 · 明早可读取':'👆 点确认即可 · 无需手写';
+}
+
+function confirmHandoff(){
+  const cr=ns('customerRecords',[]),rc=ns('revenueCards',[]),tk=state.tasks||[];
+  const undone=tk.filter(t=>!t.done).map(t=>t.text);
+  const custNext=cr.filter(c=>c.nextDate&&c.stage!=='S5').sort((a,b)=>new Date(a.nextDate)-new Date(b.nextDate))[0];
+  const rcNext=rc.filter(r=>r.stage!=='delivered'&&r.nextStep).slice(0,1);
+
+  const ho=ns('eveningHandoff',{});
+  ho.date=today();
+  ho.feeling=document.getElementById('rvFeeling')?.value||'';
+  ho.adjust=document.getElementById('rvAdjust')?.value||'';
+  ho.tomorrowGoals=[
+    {prio:'P0',text:undone[0]||'继续推进今日主目标',from:'今日未完成'},
+    {prio:'P1',text:custNext?(custNext.name+'：'+custNext.nextAction):'私聊触达·推动深聊',from:'客户下一步'},
+    {prio:'P2',text:rcNext[0]?(rcNext[0].sourceCard+'：'+rcNext[0].nextStep):'完成学习卡应用',from:'飞轮下一步'}
+  ];
+  save();
+  document.getElementById('handoffStatus').textContent='✅ 已确认 · 明早可读取';
+  renderReview();toast('复盘已确认！');
 }
 
 function confirmHandoff(){
@@ -1074,9 +1084,12 @@ async function autoLoadData(){
 // INIT
 // ═══════════════════════════════════════════
 function renderAll(){renderCockpit();renderFlywheel();renderProjects();renderCustomers();renderKnowledge();renderReview()}
-load();renderAll();
-// Auto-load D盘 data.json after initial render
-setTimeout(async()=>{await autoLoadData();renderAll()},300);
+load();
+// Load D盘 data first, then render
+(async function init(){
+  await autoLoadData();
+  renderAll();
+})();
 
 // PWA Service Worker
 if('serviceWorker' in navigator){
