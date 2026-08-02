@@ -97,6 +97,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   <div class="card"><div class="card-hd">🎯 今日3目标 <span class="badge" id="goalBadge">待确认</span></div><div id="cockpitGoals"></div></div>
   <div class="card"><div class="card-hd">✨ 今日肯定语 <span class="badge" id="affBadge">未确认</span></div><p id="affText" style="font-size:20px;font-weight:700;color:var(--rose);text-align:center;padding:14px 8px;background:linear-gradient(135deg,#fff5f5,#fdf0f0);border-radius:10px;margin-bottom:8px">---</p><div class="row"><button class="btn btn-o" onclick="newAffirmation()">🔄 换一句</button><button class="btn btn-r" onclick="confirmAffirmation()">✅ 确认这句</button></div><details style="margin-top:10px"><summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--ink2)">📖 查看全部108句</summary><div id="allAffirmations" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-height:360px;overflow-y:auto;margin-top:8px;font-size:12px"></div></details></div>
   <div class="card"><div class="card-hd">⚡ 快速操作</div><div class="row"><button class="btn btn-g" onclick="navTo('flywheel')">💰 查看赚钱飞轮</button><button class="btn btn-s" onclick="navTo('customers')">🤝 添加客户</button><button class="btn btn-o" onclick="navTo('review')">🌙 晚间复盘</button></div></div>
+  <div class="card"><div class="card-hd">📊 数据驾驶舱 <span class="badge" id="dataBadge">实时</span></div><div id="cockpitCharts"></div></div>
 </section>
 
 <!-- ② 赚钱飞轮 -->
@@ -428,6 +429,117 @@ function renderCockpit(){
   document.getElementById('allAffirmations').innerHTML=AFFIRMATIONS.map(a=>
     '<span style="padding:4px 6px;border-radius:6px;'+(a===todayAff?'background:var(--goldS);font-weight:700;':'background:var(--paper2);')+'">'+a+'</span>'
   ).join('');
+
+  // Data charts
+  renderCockpitCharts();
+}
+
+function renderCockpitCharts(){
+  const rc=ns('revenueCards',[]),cr=ns('customerRecords',[]),da=ns('dualAccounts',{meijie:{totalIncome:0},yima:{meijieShare:0}});
+  const lc=ns('learningCards',[]),yk=ns('keyMetrics',{});
+
+  // 1. Income dual progress
+  const yearTarget=yk.yearIncomeTarget||80000;
+  const meijiePct=Math.min(100,Math.round((da.meijie.totalIncome||0)/yearTarget*100));
+  const yimaPct=Math.min(100,Math.round((da.yima.meijieShare||0)/yearTarget*100));
+
+  // 2. Revenue card stage distribution
+  const stages={testing:0,verified:0,amplified:0,matched:0,closed:0,delivered:0};
+  rc.forEach(r=>{if(stages[r.stage]!==undefined)stages[r.stage]++});
+  const totalRC=rc.length||1;
+  const stageColors={testing:'#cbd5e0',verified:'#3182ce',amplified:'#d69e2e',matched:'#805ad5',closed:'#38a169',delivered:'#b8860b'};
+  const stageBar=Object.entries(stages).map(([k,v])=>'<span title="'+STAGE_LABELS[k]+': '+v+'" style="flex:'+Math.max(1,v)+';height:8px;background:'+stageColors[k]+';border-radius:2px"></span>').join('');
+
+  // 3. Customer funnel mini
+  const funnelCounts={S0:0,S1:0,S2:0,S3:0,S4:0,S5:0};
+  cr.forEach(c=>{if(funnelCounts[c.stage]!==undefined)funnelCounts[c.stage]++});
+  const maxFunnel=Math.max(1,...Object.values(funnelCounts));
+  const funnelBars=Object.entries(funnelCounts).map(([k,v])=>{
+    const labels={S0:'待触达',S1:'刚认识',S2:'有兴趣',S3:'中意向',S4:'高意向',S5:'已成交'};
+    const colors={S0:'#cbd5e0',S1:'#a0aec0',S2:'#3182ce',S3:'#d69e2e',S4:'#dd6b20',S5:'#38a169'};
+    return '<div style="display:flex;align-items:center;gap:6px;margin:3px 0"><span style="font-size:11px;width:40px;text-align:right">'+labels[k]+'</span><div style="flex:1;height:14px;background:#eee;border-radius:7px;overflow:hidden"><div style="width:'+(v/maxFunnel*100)+'%;height:100%;background:'+colors[k]+';border-radius:7px"></div></div><b style="font-size:12px;width:20px">'+v+'</b></div>';
+  }).join('');
+
+  // 4. Learning card status
+  const lcTotal=lc.length||1;
+  const lcApplied=lc.filter(c=>c.status==='已应用'||c.status==='已转化内容').length;
+  const lcTesting=lc.filter(c=>c.status==='测试中').length;
+  const lcPending=lc.filter(c=>c.status==='待应用').length;
+  const lcPct=Math.round(lcApplied/lcTotal*100);
+
+  document.getElementById('cockpitCharts').innerHTML=
+    '<div class="section-label">💰 年度收入进度 ¥'+(yearTarget/10000).toFixed(1)+'万</div>'+
+    '<div style="margin:4px 0"><small>梅姐个人 ¥'+(da.meijie.totalIncome||0).toLocaleString()+' ('+meijiePct+'%)</small><div class="progress"><i style="width:'+meijiePct+'%;background:linear-gradient(90deg,#b8860b,#d4a843)"></i></div></div>'+
+    '<div style="margin:4px 0"><small>驿马实收 ¥'+(da.yima.meijieShare||0).toLocaleString()+' ('+yimaPct+'%)</small><div class="progress"><i style="width:'+yimaPct+'%;background:linear-gradient(90deg,#5b8c6f,#7db892)"></i></div></div>'+
+    '<div class="section-label">🔄 赚钱飞轮阶段分布</div>'+
+    '<div class="progress-steps">'+stageBar+'</div>'+
+    '<div style="display:flex;flex-wrap:wrap;gap:6px;font-size:10px;margin-top:4px">'+Object.entries(stages).map(([k,v])=>'<span class="pill pill-ink">'+STAGE_LABELS[k]+' '+v+'</span>').join('')+'</div>'+
+    '<div class="section-label">📊 客户漏斗</div>'+funnelBars+
+    '<div class="section-label">📚 学习卡应用率</div>'+
+    '<div class="progress"><i style="width:'+lcPct+'%;background:linear-gradient(90deg,#5b8c6f,#7db892)"></i></div>'+
+    '<small>'+lcApplied+'/'+lcTotal+' 已应用 · '+lcTesting+'测试中 · '+lcPending+'待应用</small>'+
+    '<div class="section-label">📈 月度心态趋势</div>'+
+    '<svg id="mindsetTrendSVG" viewBox="0 0 360 160" style="width:100%;height:auto"></svg>'+
+    '<div class="section-label">🗓️ 本周能量分布</div>'+
+    '<div id="weekEnergyPie" style="display:flex;align-items:center;gap:16px;padding:8px 0"></div>';
+  renderMindsetCharts();
+}
+
+function renderMindsetCharts(){
+  // Monthly mindset SVG line chart
+  const svg=document.getElementById('mindsetTrendSVG');
+  if(!svg)return;
+  const now=new Date(),month=now.getMonth(),year=now.getFullYear();
+  const hist=state.mindsetTotalHistory||{};
+  const days=new Date(year,month+1,0).getDate();
+  const W=360,H=160,padL=32,padR=8,padT=20,padB=24;
+  let pts=[],maxV=0;
+  for(let d=1;d<=days;d++){
+    const key=year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const v=Number(hist[key])||0;if(v>maxV)maxV=v;
+    if(v>0)pts.push({d,v});
+  }
+  maxV=Math.max(100,maxV);
+  let html='';
+  // Grid lines
+  for(let i=0;i<=100;i+=25){
+    const y=H-padB-(i/maxV)*(H-padT-padB);
+    html+='<line x1="'+padL+'" y1="'+y+'" x2="'+(W-padR)+'" y2="'+y+'" stroke="#e0d8cc" stroke-width="1"/>';
+    html+='<text x="'+(padL-4)+'" y="'+(y+4)+'" font-size="9" fill="#8a7b65" text-anchor="end">'+i+'</text>';
+  }
+  // Day labels
+  for(let d=1;d<=days;d+=5){
+    const x=padL+(d-1)*(W-padL-padR)/(days-1);
+    html+='<text x="'+x+'" y="'+(H-6)+'" font-size="8" fill="#8a7b65" text-anchor="middle">'+d+'</text>';
+  }
+  // Line
+  if(pts.length>1){
+    html+='<polyline points="'+pts.map(p=>{
+      const x=padL+(p.d-1)*(W-padL-padR)/(days-1);
+      const y=H-padB-(p.v/maxV)*(H-padT-padB);
+      return x+','+y;
+    }).join(' ')+'" fill="none" stroke="#b8860b" stroke-width="2.5" stroke-linecap="round"/>';
+    // Dots
+    pts.forEach(p=>{
+      const x=padL+(p.d-1)*(W-padL-padR)/(days-1);
+      const y=H-padB-(p.v/maxV)*(H-padT-padB);
+      html+='<circle cx="'+x+'" cy="'+y+'" r="3" fill="#b8860b"><title>'+p.d+'日: '+p.v+'分</title></circle>';
+    });
+  }
+  if(!pts.length)html+='<text x="'+(W/2)+'" y="'+(H/2)+'" font-size="12" fill="#8a7b65" text-anchor="middle">本月暂无心态评分数据</text>';
+  svg.innerHTML=html;
+
+  // Weekly energy pie
+  const weekStart=new Date();weekStart.setDate(now.getDate()-((now.getDay()+6)%7));weekStart.setHours(0,0,0,0);
+  const eh=state.energyHistory||[];
+  const weekRecords=eh.filter(x=>new Date(x.date)>=weekStart);
+  const bins=[{name:'满血',scores:[10],color:'#d65f5f'},{name:'充足',scores:[8,9],color:'#d69e2e'},{name:'还行',scores:[6,7],color:'#3182ce'},{name:'疲惫',scores:[4,5],color:'#805ad5'},{name:'低谷',scores:[1,2,3],color:'#718096'}];
+  const data=bins.map(b=>({...b,count:weekRecords.filter(x=>b.scores.includes(Number(x.score))).length}));
+  const total=data.reduce((s,x)=>s+x.count,0);
+  const pieGrad=total?('conic-gradient('+data.reduce((a,x)=>{const s=a.e,e=s+x.count/total*100;a.t+=x.color+' '+s+'% '+e+'%, ';a.e=e;return a},{t:'',e:0}).t.slice(0,-2)+')'):'#edf2f7';
+  document.getElementById('weekEnergyPie').innerHTML=
+    '<div style="width:90px;height:90px;border-radius:50%;background:'+pieGrad+';position:relative;flex-shrink:0"><div style="position:absolute;inset:22px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px"><b>'+total+'<br>次</b></div></div>'+
+    '<div style="flex:1">'+data.map(x=>'<div style="display:flex;gap:6px;align-items:center;margin:4px 0;font-size:12px"><i style="width:8px;height:8px;border-radius:50%;background:'+x.color+'"></i>'+x.name+' <b style="margin-left:auto">'+x.count+'次</b></div>').join('')+'</div>';
 }
 
 function applyHandoff(){
