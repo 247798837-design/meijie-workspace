@@ -368,12 +368,28 @@ function renderCockpit(){
     '<div class="stat"><b>'+daysSince(ANCHOR.deepwork)+'</b><span>深耕密码</span></div>'+
     '<div class="stat"><b>'+daysSince(ANCHOR.accompany)+'</b><span>陪读天数</span></div>';
 
-  // Morning handoff
+  // Morning handoff from yesterday's review
   const ho=ns('eveningHandoff',{});
+  const yr=ns('yesterdayReview',{});
   const hoEl=document.getElementById('morningHandoff');
+  let hoHTML='';
   if(ho.date&&ho.date!==today()&&ho.tomorrowGoals&&ho.tomorrowGoals.length){
-    hoEl.innerHTML='<div class="card" style="border-left:3px solid var(--gold)"><div class="card-hd">🌅 昨日交接 ('+ho.date+')</div>'+ho.tomorrowGoals.map(g=>'<div style="padding:4px 0"><span class="tag tag-'+g.prio+'">'+g.prio.toUpperCase()+'</span> '+g.text+' <small style="color:var(--ink3)">← '+g.from+'</small></div>').join('')+'<button class="btn btn-g" style="width:100%;margin-top:8px" onclick="applyHandoff()">📋 应用为今日目标</button></div>';
-  }else{hoEl.innerHTML='';}
+    hoHTML+='<div class="card" style="border-left:3px solid var(--gold)"><div class="card-hd">🌅 昨日复盘交接 ('+ho.date+')</div>';
+    if(yr.summary)hoHTML+='<p style="font-size:12px;color:var(--ink3);margin-bottom:8px">'+yr.summary+'</p>';
+    hoHTML+=ho.tomorrowGoals.map(g=>'<div style="padding:4px 0"><span class="tag tag-'+g.prio+'">'+g.prio.toUpperCase()+'</span> '+g.text+' <small style="color:var(--ink3)">← '+g.from+'</small></div>').join('');
+    if(yr.biggestGap)hoHTML+='<p style="font-size:12px;margin-top:6px"><b>⚠️ 昨日卡点：</b>'+yr.biggestGap+'</p>';
+    if(yr.oneFix)hoHTML+='<p style="font-size:12px;color:var(--sage)"><b>🔧 只改一处：</b>'+yr.oneFix+'</p>';
+    hoHTML+='<button class="btn btn-g" style="width:100%;margin-top:8px" onclick="applyHandoff()">📋 应用为今日目标</button></div>';
+  }
+  // Today plan summary from 六项计划
+  const tp=ns('todayPlan',{});
+  if(tp.principle){
+    hoHTML+='<div class="card" style="border-left:3px solid var(--sage)"><div class="card-hd">📋 今日六项计划 <small style="font-weight:400;color:var(--ink3)">来自 '+tp.source+'</small></div>';
+    hoHTML+='<p style="font-size:12px;color:var(--ink3);margin-bottom:6px">'+tp.principle+'</p>';
+    if(tp.todayResults)hoHTML+=tp.todayResults.map(r=>'<div style="padding:3px 0;font-size:13px"><span class="pill pill-sage">'+r.status+'</span> <b>'+r.project+'</b>：'+r.result+'</div>').join('');
+    hoHTML+='</div>';
+  }
+  hoEl.innerHTML=hoHTML;
 
   // KPIs
   const ms=ns('mindset',{}),rc=ns('revenueCards',[]),cr=ns('customerRecords',[]),da=ns('dualAccounts',{meijie:{totalIncome:0},yima:{meijieShare:0}});
@@ -780,10 +796,38 @@ async function syncFromCloud(){
   try{var r=await fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+GH.path,{headers:{Authorization:'Bearer '+token}});if(!r.ok){s.textContent='云端暂无数据';toast('请先上传');return}var d=await r.json();state=JSON.parse(decodeURIComponent(escape(atob(d.content))));state._version=2;save();renderAll();s.textContent='✅ 已下载';toast('下载成功！')}catch(e){s.textContent='❌ 下载失败';toast('下载失败')}}
 
 // ═══════════════════════════════════════════
+// AUTO-LOAD data.json (D盘提取数据)
+// ═══════════════════════════════════════════
+async function autoLoadData(){
+  try{
+    const r=await fetch('data.json?'+Date.now());
+    if(!r.ok)return;
+    const d=await r.json();
+    // Merge into state (don't overwrite user's manual inputs)
+    if(d.todayMeta){state.todayMeta=d.todayMeta}
+    if(d.cockpit){
+      if(d.cockpit.todayGoals&&!state.tasks?.length)state.tasks=d.cockpit.todayGoals.map(g=>({text:g.text,prio:g.prio,done:false,from:g.from}));
+      if(d.cockpit.yesterdayHandoff)state.eveningHandoff=state.eveningHandoff||d.cockpit.yesterdayHandoff;
+    }
+    if(d.projects&&!state.projects)state.projects=d.projects;
+    if(d.revenueCards&&!state.revenueCards?.length)state.revenueCards=d.revenueCards;
+    if(d.learningCards&&!state.learningCards?.length)state.learningCards=d.learningCards;
+    if(d.dualAccounts&&!state.dualAccounts)state.dualAccounts=d.dualAccounts;
+    if(d.yesterdayReview&&!state.yesterdayReview)state.yesterdayReview=d.yesterdayReview;
+    if(d.todayPlan&&!state.todayPlan)state.todayPlan=d.todayPlan;
+    if(d.keyMetrics&&!state.keyMetrics)state.keyMetrics=d.keyMetrics;
+    state._dataLoaded=true;save();
+    console.log('✅ 工作台数据已加载：',d._source,d._generated);
+  }catch(e){console.log('data.json 加载失败，使用本地缓存')}
+}
+
+// ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
 function renderAll(){renderCockpit();renderFlywheel();renderProjects();renderCustomers();renderKnowledge();renderReview()}
 load();renderAll();
+// Auto-load D盘 data.json after initial render
+setTimeout(async()=>{await autoLoadData();renderAll()},300);
 
 // PWA Service Worker
 if('serviceWorker' in navigator){

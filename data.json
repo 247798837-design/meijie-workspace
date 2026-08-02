@@ -1,37 +1,172 @@
 {
-  "_seeded": true,
-  "version": 2,
-  "tasks": [
-    {"text": "发布今日口播视频", "prio": "p0", "done": false, "family": false},
-    {"text": "跟进3个意向客户", "prio": "p1", "done": false, "family": false},
-    {"text": "完成学习卡一张", "prio": "p2", "done": false, "family": false},
-    {"text": "陪儿子检查作业", "prio": "p1", "done": false, "family": true}
-  ],
-  "flywheel": {"write": "", "shoot": "", "publish": "", "connect": 0, "need": 0, "income": 0, "review": ""},
-  "mindset": {"energyScore": 7, "morningMood": 8, "nightMood": 0, "resistances": [], "affirmation": "今天的我比昨天更接近目标"},
-  "dailyGoal": "推进三平台内容闭环",
-  "eduFund": {"saved": 0},
-  "goalPlan": {
-    "yearTarget": 80000,
-    "yearBaseActual": 18407.60,
-    "monthKeyword": "高阶客户转化",
-    "products": {"p1199": {"deals": 0, "income": 0}, "p14999": {"deals": 0, "income": 0}, "p49800": {"deals": 0, "income": 0}}
+  "_version": 2,
+  "_generated": "2026-08-02T08:00:00",
+  "_source": "D盘梅姐飞轮知识库自动提取",
+
+  "todayDate": "2026-08-02",
+  "todayMeta": {
+    "weekday": "周日",
+    "season": "暑假",
+    "gaokaoCountdown": 675,
+    "deepworkDays": 1022,
+    "accompanyDays": 155
   },
-  "fanGoal": {"current": 194, "target": 500},
-  "monthlyPublishGoal": 30,
-  "videoStats": {"totalViews": 25725, "totalLikes": 291, "totalComments": 295, "totalShares": 78, "totalFollowers": 194, "totalVideos": 256},
-  "customerRecords": [],
-  "slots": [
-    {"time": "09:00", "cat": "内容生产", "plan": 120, "actual": 0},
-    {"time": "14:00", "cat": "客户深聊", "plan": 120, "actual": 0},
-    {"time": "20:30", "cat": "学习复盘", "plan": 60, "actual": 0}
+
+  "cockpit": {
+    "todayGoals": [
+      {"prio": "P0", "text": "完成幸福人生生日共创Day1·记录寿星和互动反馈", "from": "六项计划"},
+      {"prio": "P1", "text": "审看学习卡测试问题·确认后小范围试用", "from": "六项计划"},
+      {"prio": "P2", "text": "完成儿子一个暑假学习小任务", "from": "六项计划"}
+    ],
+    "yesterdayHandoff": {
+      "date": "2026-08-01",
+      "tomorrowGoals": [
+        {"prio": "P0", "text": "小杰合成1分钟总视频→梅姐验收→发布视频号", "from": "每日复盘"},
+        {"prio": "P1", "text": "公众号长文排版+小红书九图发布", "from": "每日复盘"},
+        {"prio": "P2", "text": "五数补填+面板导出+教育基金启动", "from": "每日复盘"}
+      ]
+    }
+  },
+
+  "projects": [
+    {
+      "id": "P-MEJIE-FLYWHEEL", "name": "梅姐飞轮", "type": "个人IP核心经营",
+      "status": "active", "priority": "P0", "goal": "月入¥10,000",
+      "thisWeek": "内驱1-9内容体系发布+幸福人生三期启动",
+      "todayAction": "审看学习卡测试问题·确认后小范围试用",
+      "incomeLine": "meijie"
+    },
+    {
+      "id": "P-AWAKENING", "name": "觉醒计划·星火组", "type": "驿马善琰·组长管理",
+      "status": "active", "priority": "P1", "goal": "完成组长每日职责+学员帮扶",
+      "thisWeek": "W4周榜+7月月榜全部交付",
+      "todayAction": "周日无课·按需执行", "incomeLine": "yima"
+    },
+    {
+      "id": "P-HAPPINESS", "name": "幸福人生·三期", "type": "驿马善琰·社群裂变",
+      "status": "active", "priority": "P1", "goal": "完成社群运营+成交转化",
+      "thisWeek": "8/2正式开营",
+      "todayAction": "19:00生日共创Day1", "incomeLine": "yima"
+    },
+    {
+      "id": "P-FAMILY-STUDY", "name": "家庭陪读", "type": "家庭项目",
+      "status": "active", "priority": "P1", "goal": "儿子高一·暑假学习+日本留学准备",
+      "todayAction": "完成一个儿子学习小任务+家庭交流", "incomeLine": null
+    }
   ],
-  "inspirations": [],
-  "projects": [],
-  "learningCard": {"what": "", "source": "觉醒早课", "insight": "", "apply": ""},
-  "cases": [],
-  "review": {"best": "", "adjust": ""},
-  "obsidianSeeded": true,
-  "dailyRecords": {},
-  "targets": {"short": {"goal": 60, "current": 0}, "xhs": {"goal": 20, "current": 0}, "follow": {"goal": 200, "current": 194}, "income": {"goal": 6667, "current": 0}}
+
+  "revenueCards": [
+    {
+      "id": "rc_d21", "sourceCard": "D21·双师制与团队补位",
+      "userProblem": "讲课是把知识传出去，辅导是陪学员把知识变成能力",
+      "stage": "verified", "userQuotes": [],
+      "nextStep": "完成一次倾听并记录原话",
+      "contentStatus": "已生成视频号脚本+公众号长文+小红书方案",
+      "matchedProduct": "待确认", "revenueLine": "meijie", "actualIncome": 0
+    },
+    {
+      "id": "rc_real", "sourceCard": "真实表达不是为了赢",
+      "userProblem": "因为怕别人不高兴，把想说的话咽回去",
+      "stage": "testing", "userQuotes": [],
+      "nextStep": "梅姐审看测试问题→社群小范围试用→收集用户原话",
+      "contentStatus": "", "matchedProduct": "待确认", "revenueLine": "meijie", "actualIncome": 0
+    },
+    {
+      "id": "rc_drive", "sourceCard": "姓名内驱数字1-9",
+      "userProblem": "不同内驱数字的人，真正想要的东西不一样",
+      "stage": "amplified", "userQuotes": [],
+      "nextStep": "小杰合成总视频→梅姐验收发布→收集评论反馈",
+      "contentStatus": "9条视频+公众号+小红书已完成",
+      "matchedProduct": "9.9定位卡", "revenueLine": "meijie", "actualIncome": 0
+    }
+  ],
+
+  "learningCards": [
+    {
+      "id": "lc_real_demand", "date": "2026-07-22",
+      "title": "穿透表象，看见真实需求",
+      "source": "觉醒计划腾讯会议纪要",
+      "core": "先倾听原话和情绪，再通过提问、观察与小行动验证真实需求",
+      "application": "选择一位真实沟通对象，完成一次不急着给答案的倾听",
+      "status": "已应用"
+    },
+    {
+      "id": "lc_team", "date": "2026-07-27",
+      "title": "团队协作：从单打独斗到共同托举",
+      "source": "觉醒计划全员复盘会议纪要",
+      "core": "真正的团队要围绕共同目标开展真实沟通、共同分工与相互托举",
+      "application": "与1位活跃伙伴和1位沉默伙伴各完成一次15分钟倾听",
+      "status": "待应用"
+    },
+    {
+      "id": "lc_d21", "date": "2026-08-01",
+      "title": "D21·双师制与团队补位",
+      "source": "觉醒计划课程",
+      "core": "讲课是把知识传出去，辅导是陪学员把知识变成能力",
+      "application": "梳理姓名内驱入门营与进阶营框架",
+      "status": "已转化内容"
+    },
+    {
+      "id": "lc_real", "date": "2026-08-02",
+      "title": "真实表达不是为了赢",
+      "source": "今日学习卡",
+      "core": "怕别人不高兴而压抑表达→测试问题：你有没有因为怕别人不高兴把想说的话咽回去？",
+      "application": "社群/朋友圈小范围测试→收集用户原话→形成问题解决卡",
+      "status": "测试中"
+    }
+  ],
+
+  "customerRecords": [],
+
+  "dualAccounts": {
+    "meijie": {
+      "label": "梅姐个人收入",
+      "deals": [
+        {"date": "2026-03", "desc": "历史收入", "amount": 1573},
+        {"date": "2026-04", "desc": "李立凤·导师班佣金", "amount": 13000},
+        {"date": "2026-04", "desc": "其他9笔历史成交", "amount": 1372},
+        {"date": "2026-05", "desc": "999创富营+365年卡", "amount": 1864},
+        {"date": "2026-06", "desc": "199产品+999佣金", "amount": 598.60}
+      ],
+      "totalIncome": 18407.60
+    },
+    "yima": {
+      "label": "驿马善琰利润·梅姐实收",
+      "deals": [],
+      "totalRevenue": 0,
+      "meijieShare": 0
+    }
+  },
+
+  "yesterdayReview": {
+    "date": "2026-08-01",
+    "summary": "海报和内容双线作战——海报100%交付，内驱1-9内容体系从0到1搭建完成。唯一缺口：内容发布窗口被海报挤占。",
+    "top3Results": [
+      "觉醒计划表彰海报全交付·统一模板+自动化脚本",
+      "内驱1-9内容体系0→1·9条视频+公众号+小红书",
+      "系统架构升级完成·完整个人成长飞轮"
+    ],
+    "biggestGap": "海报占据全部白天，内容发布窗口全部错过",
+    "oneFix": "内容发布窗口神圣化——不因内部制作任务挪动"
+  },
+
+  "todayPlan": {
+    "source": "六项计划_20260802.md",
+    "principle": "学习卡测试、获客、私域承接、产品匹配、成交到账和交付反馈必须连起来",
+    "todayResults": [
+      {"project": "幸福人生", "result": "19:00完成生日共创Day 1", "status": "待做"},
+      {"project": "梅姐飞轮", "result": "审看测试问题·确认后小范围试用", "status": "待做"},
+      {"project": "家庭暑假", "result": "完成一个儿子学习小任务", "status": "待做"}
+    ]
+  },
+
+  "keyMetrics": {
+    "yearIncomeTarget": 80000,
+    "yearActualIncome": 18407.60,
+    "yearGap": 61592.40,
+    "yearRate": "23.0%",
+    "educationFundTarget": 200000,
+    "educationFundSaved": 0,
+    "monthsRemaining": 22
+  }
 }
