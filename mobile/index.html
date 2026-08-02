@@ -97,6 +97,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   <div class="card"><div class="card-hd">🎯 今日3目标 <span class="badge" id="goalBadge">待确认</span></div><div id="cockpitGoals"></div></div>
   <div class="card"><div class="card-hd">✨ 今日肯定语 <span class="badge" id="affBadge">未确认</span></div><p id="affText" style="font-size:20px;font-weight:700;color:var(--rose);text-align:center;padding:14px 8px;background:linear-gradient(135deg,#fff5f5,#fdf0f0);border-radius:10px;margin-bottom:8px">---</p><div class="row"><button class="btn btn-o" onclick="newAffirmation()">🔄 换一句</button><button class="btn btn-r" onclick="confirmAffirmation()">✅ 确认这句</button></div><details style="margin-top:10px"><summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--ink2)">📖 查看全部108句</summary><div id="allAffirmations" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-height:360px;overflow-y:auto;margin-top:8px;font-size:12px"></div></details></div>
   <div class="card"><div class="card-hd">⚡ 快速操作</div><div class="row"><button class="btn btn-g" onclick="navTo('flywheel')">💰 查看赚钱飞轮</button><button class="btn btn-s" onclick="navTo('customers')">🤝 添加客户</button><button class="btn btn-o" onclick="navTo('review')">🌙 晚间复盘</button></div></div>
+  <div class="card"><div class="card-hd">💬 快速记录 <small style="font-weight:400;color:var(--ink3)">说一句大白话，自动识别</small></div>
+    <textarea id="quickNote" rows="2" placeholder="例：王姐说她总怕别人不高兴，约明晚继续聊" style="width:100%;border:1px solid rgba(44,36,22,.12);border-radius:8px;padding:10px;font:inherit;font-size:14px;resize:vertical"></textarea>
+    <button class="btn btn-g" style="width:100%;margin-top:6px" onclick="parseQuickNote()">✨ 自动识别并记录</button>
+    <div id="quickResult" style="margin-top:6px;font-size:12px;color:var(--ink3)"></div>
+  </div>
   <div class="card"><div class="card-hd">📊 数据驾驶舱 <span class="badge" id="dataBadge">实时</span></div><div id="cockpitCharts"></div></div>
 </section>
 
@@ -906,6 +911,63 @@ async function syncToCloud(){
 async function syncFromCloud(){
   var token=ghToken();if(!token)return;var s=document.getElementById('syncStatus');s.textContent='下载中…';
   try{var r=await fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+GH.path,{headers:{Authorization:'Bearer '+token}});if(!r.ok){s.textContent='云端暂无数据';toast('请先上传');return}var d=await r.json();state=JSON.parse(decodeURIComponent(escape(atob(d.content))));state._version=2;save();renderAll();s.textContent='✅ 已下载';toast('下载成功！')}catch(e){s.textContent='❌ 下载失败';toast('下载失败')}}
+
+// ═══════════════════════════════════════════
+// 大白话自动解析引擎
+// ═══════════════════════════════════════════
+function parseQuickNote(){
+  const raw=document.getElementById('quickNote').value.trim();
+  if(!raw){toast('请输入一句话');return}
+  const result={type:'unknown',customer:null,problem:null,date:null,amount:null,project:null};
+  const r=raw;
+  if(/成交|到账|收款|付款|赚了|收入|佣金/.test(r))result.type='income';
+  else if(/发布|发了|视频|公众号|小红书|朋友圈|直播/.test(r))result.type='content';
+  else if(/学了|学习卡|笔记|心得|听课/.test(r))result.type='learning';
+  else if(/完成|做完了|搞定了|交付了/.test(r))result.type='task_done';
+  else result.type='customer';
+  const nameM=r.match(/([^\s,，。！？]{1,4})(?:姐|哥|老师|先生|女士|总|妈|爸)/);
+  if(nameM)result.customer=nameM[0];
+  const probM=r.match(/(?:说|觉得|怕|担心|想|希望)([^,，。！？]{4,30})/);
+  if(probM)result.problem=probM[1];
+  if(/明天/.test(r)){const d=new Date();d.setDate(d.getDate()+1);result.date=d.toISOString().slice(0,10)}
+  else if(/后天/.test(r)){const d=new Date();d.setDate(d.getDate()+2);result.date=d.toISOString().slice(0,10)}
+  const amtM=r.match(/(\d+(?:\.\d+)?)[\s]*(?:元|块|到账)/);
+  if(amtM)result.amount=parseFloat(amtM[1]);
+  if(/幸福人生|生日|共创|社群/.test(r))result.project='幸福人生';
+  else if(/觉醒|星火|学员|组长/.test(r))result.project='觉醒计划';
+  else if(/儿子|孩子|陪读|家庭/.test(r))result.project='家庭陪读';
+  else result.project='梅姐飞轮';
+
+  const actions=[];
+  if(result.type==='customer'){
+    const cr=ns('customerRecords',[]);
+    const cust={
+      name:result.customer||'未命名',source:'口头记录',
+      realProblem:result.problem||r.slice(0,40),
+      stage:result.date?'S2':'S1',project:result.project,
+      revenueLine:result.project==='幸福人生'||result.project==='觉醒计划'?'yima':'meijie',
+      nextAction:result.date?'约定'+result.date:'继续跟进',nextDate:result.date||'',note:r,updated:today()
+    };
+    const exist=cr.findIndex(c=>c.name===cust.name);
+    if(exist>=0){cr[exist]={...cr[exist],...cust};actions.push('更新客户: '+cust.name)}
+    else{cr.push({...cust,added:today()});actions.push('新增客户: '+cust.name)}
+  }
+  if(result.type==='income'&&result.amount){
+    const da=ns('dualAccounts',{meijie:{totalIncome:0,deals:[]},yima:{meijieShare:0,deals:[]}});
+    const line=result.project==='幸福人生'||result.project==='觉醒计划'?'yima':'meijie';
+    if(line==='meijie'){da.meijie.deals.push({date:today(),desc:r.slice(0,30),amount:result.amount});da.meijie.totalIncome=(da.meijie.totalIncome||0)+result.amount}
+    else{da.yima.deals.push({date:today(),desc:r.slice(0,30),amount:result.amount});da.yima.meijieShare=(da.yima.meijieShare||0)+result.amount}
+    actions.push('记录到账: ¥'+result.amount+' ('+(line==='meijie'?'梅姐个人':'驿马利润')+')');
+  }
+  if(result.type==='task_done'){
+    const tasks=state.tasks||[];
+    const match=tasks.find(t=>!t.done&&r.includes(t.text?.slice(0,6)));
+    if(match){match.done=true;actions.push('标记完成: '+match.text)}
+  }
+  save();document.getElementById('quickNote').value='';
+  document.getElementById('quickResult').innerHTML='<span class="pill pill-gold">'+result.type+'</span> '+(result.customer?'<span class="pill pill-sage">'+result.customer+'</span> ':'')+(result.project?'<span class="pill pill-ink">'+result.project+'</span> ':'')+'<br>'+actions.map(a=>'✅ '+a).join('<br>');
+  renderAll();toast(actions.length?'已记录 '+actions.length+' 项':'未能识别，请手动添加');
+}
 
 // ═══════════════════════════════════════════
 // AUTO-LOAD data.json (D盘提取数据)
