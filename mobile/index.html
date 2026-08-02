@@ -148,6 +148,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <div class="fld"><label>明日P1（推进成交/客户）</label><input id="rvP1" placeholder="离钱最近的动作"></div>
     <div class="fld"><label>明日P2（公司职责/交付）</label><input id="rvP2" placeholder="不能拖延的交付"></div>
     <button class="btn btn-p" style="width:100%" onclick="confirmHandoff()">✅ 确认明日交接</button>
+    <button class="btn btn-o" style="width:100%;margin-top:6px" onclick="exportReviewToObsidian()">📝 导出复盘→同步回Obsidian</button>
     <p id="handoffStatus" style="font-size:11px;color:var(--sage);margin-top:6px;text-align:center"></p>
   </div>
 </section>
@@ -845,6 +846,63 @@ function confirmHandoff(){
   save();
   document.getElementById('handoffStatus').textContent='✅ 已确认 · 明日驾驶舱可读取';
   toast('明日交接已确认！');
+}
+
+async function exportReviewToObsidian(){
+  // Collect all today's data into Obsidian-format Markdown
+  const ho=ns('eveningHandoff',{}),cr=ns('customerRecords',[]),rc=ns('revenueCards',[]);
+  const da=ns('dualAccounts',{meijie:{totalIncome:0},yima:{meijieShare:0}});
+  const tk=state.tasks||[];
+
+  // 1. Daily review Markdown
+  let review='# 每日复盘 · '+today()+'\n\n';
+  review+='> 来源：工作台自动导出 | 状态：待小高写回D盘\n\n';
+  review+='## 一、今日总评\n'+ho.mindset||'待填'+'\n\n';
+  review+='## 二、六项复盘\n\n';
+  review+='### 💚 心态\n- '+ho.mindset||'—'+'\n';
+  review+='### 📖 学习\n- '+ho.learning||'—'+'\n';
+  review+='### 🎯 目标\n- '+ho.goals||'—'+'\n';
+  review+='### ⚡ 行动\n- '+ho.action||'—'+'\n';
+  review+='### ⏰ 时间\n- '+ho.time||'—'+'\n';
+  review+='### 💰 客户\n- '+ho.customers||'—'+'\n';
+  review+='\n## 三、双账\n- 梅姐个人到账：¥'+(da.meijie.totalIncome||0)+'\n- 驿马利润实收：¥'+(da.yima.meijieShare||0)+'\n';
+  review+='\n## 四、今日有效动作\n- '+ho.action||'—'+'\n';
+  review+='\n## 五、最大断点\n- '+ho.gap||'—'+'\n';
+  review+='\n## 六、客户推进\n';
+  cr.forEach(c=>{review+='- '+c.name+' | '+c.stage+' | '+(c.realProblem||'')+' | → '+c.nextAction+'\n'});
+  review+='\n## 七、明日交接\n';
+  if(ho.tomorrowGoals)ho.tomorrowGoals.forEach(g=>{review+='- ['+g.prio+'] '+g.text+' ← '+g.from+'\n'});
+  review+='- 保留：'+ho.keep||'—'+'\n- 调整：'+ho.adjust||'—'+'\n- 停止：'+ho.stop||'—'+'\n';
+
+  // 2. Tomorrow handoff Markdown
+  let handoff='# 明日交接 · '+today()+'\n\n';
+  handoff+='> 梅姐已确认 ✅ | 明早总统筹自动读取\n\n';
+  handoff+='## 明日三目标\n\n';
+  if(ho.tomorrowGoals)ho.tomorrowGoals.forEach(g=>{handoff+='| '+g.prio+' | '+g.text+' | '+g.from+' | |\n'});
+  handoff+='\n## 明日保留\n'+ho.keep||'—'+'\n## 明日调整\n'+ho.adjust||'—'+'\n## 明日停止\n'+ho.stop||'—'+'\n';
+
+  // 3. Updated data.json for小高
+  const snapshot={...state,_exported:new Date().toISOString(),_source:'工作台晚间导出'};
+
+  // Upload to GitHub
+  const token=ghToken();if(!token){toast('请先在设置中配置GitHub Token');return}
+  const s=document.getElementById('syncStatus');
+  let uploaded=0;
+  try{
+    const files=[
+      {path:'04_复盘归档/每日复盘/每日复盘_'+today()+'.md',content:review},
+      {path:'04_复盘归档/明日交接/明日交接_'+today()+'.md',content:handoff},
+      {path:'data.json',content:JSON.stringify(snapshot,null,2)}
+    ];
+    for(const f of files){
+      let sha='';try{const r=await fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+f.path,{headers:{Authorization:'Bearer '+token}});if(r.ok)sha=(await r.json()).sha}catch(e){}
+      const body={message:'晚间复盘导出 '+today(),content:btoa(unescape(encodeURIComponent(f.content)))};if(sha)body.sha=sha;
+      const r=await fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+f.path,{method:'PUT',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(body)});
+      if(r.ok)uploaded++;
+    }
+    s.textContent='✅ 已导出'+uploaded+'个文件到GitHub';
+    toast('复盘已导出！小高将同步到D盘');
+  }catch(e){s.textContent='导出失败';toast('网络错误，请重试')}
 }
 
 // ═══════════════════════════════════════════
