@@ -267,8 +267,8 @@ function migrateFromV1(){
 var ANCHOR={gaokao:new Date(2028,5,7),accompany:new Date(2026,2,1),deepwork:new Date(2023,9,15)};
 function today(){return new Date().toISOString().slice(0,10)}
 function fmt(d){var w=['日','一','二','三','四','五','六'];return d.getMonth()+1+'月'+d.getDate()+'日 周'+w[d.getDay()]}
-function countdown(target){return Math.ceil((target-new Date())/(86400000))}
-function daysSince(start){return Math.floor((new Date()-start))/(86400000)+1}
+function countdown(target){const t=new Date(new Date().toDateString());return Math.max(0,Math.ceil((target-t)/86400000))}
+function daysSince(start){const t=new Date(new Date().toDateString());const s=new Date(start.getFullYear(),start.getMonth(),start.getDate());return Math.floor((t-s)/86400000)+1}
 
 // ═══════════════════════════════════════════
 // NAVIGATION
